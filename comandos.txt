@@ -2,7 +2,6 @@
 cd frontend
 npm run dev
 
-
 <------ Compilar el backend ----->
 source venv/bin/activate
 cd backend
@@ -11,3 +10,9 @@ python3 manage,py runserver
 <------ Entrar a la base de datos ------->
 sudo -i -u postgres
 psql -d planeacion
+
+
+<------ Github ---------->
+git add.
+git commit -m "Descripcion"
+git push
