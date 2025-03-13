@@ -5,6 +5,7 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import getNavigation from "./Navegacion";
 import { useDemoRouter } from "@toolpad/core/internal";
+import BasicLineChart from "../estudiantes/ServiciosEscolares";
 
 const NAVIGATION = getNavigation();
 
@@ -31,41 +32,28 @@ const demoTheme = createTheme({
 
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
-    <Box
-      sx={{
-        py: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
+   <>
       <Typography>Ruta actual: {pathname}</Typography>
 
-      {/* Renderizar contenido basado en la ruta */}
-      {pathname === "/inicio" && (
-        <Typography>Bienvenido a la página de inicio</Typography>
+      {pathname === "/estudiantes/dashboard-estudiantes" && (
+       <BasicLineChart></BasicLineChart>        
       )}
       {pathname === "/dashboard" && (
         <Typography>Bienvenido al Dashboard</Typography>
       )}
       {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
-    </Box>
+    </>
   );
 }
 
 interface DemoProps {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window?: () => Window;
 }
 
 export default function PaginaInicio(props: DemoProps) {
   const { window } = props;
 
-  const router = useDemoRouter("/estudiantes/ServiciosEscolares");
+  const router = useDemoRouter();
 
   // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
