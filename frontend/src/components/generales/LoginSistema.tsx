@@ -1,7 +1,7 @@
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { SignInPage, type AuthProvider } from "@toolpad/core/SignInPage";
 import { useTheme } from "@mui/material/styles";
-import logo from "../assets/logo.svg";
+import logo from "./../../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 
 const providers = [{ id: "credentials", name: "Credentials" }];
