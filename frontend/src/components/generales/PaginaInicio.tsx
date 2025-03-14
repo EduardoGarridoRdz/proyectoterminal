@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles";
 import { AppProvider } from "@toolpad/core/AppProvider";
@@ -32,11 +31,9 @@ const demoTheme = createTheme({
 
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
-   <>
-      <Typography>Ruta actual: {pathname}</Typography>
-
+    <>
       {pathname === "/estudiantes/dashboard-estudiantes" && (
-       <BasicLineChart></BasicLineChart>        
+        <BasicLineChart></BasicLineChart>
       )}
       {pathname === "/dashboard" && (
         <Typography>Bienvenido al Dashboard</Typography>

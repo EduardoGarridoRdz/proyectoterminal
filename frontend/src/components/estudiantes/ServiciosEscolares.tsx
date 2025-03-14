@@ -1,17 +1,29 @@
-import { LineChart } from "@mui/x-charts/LineChart";
-import InputFileUpload from "../generales/SubirArchivos";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid2";
-import { BarChart } from "@mui/x-charts";
-import { PieChart } from "@mui/x-charts";
 import { Typography } from "@mui/material";
+import { BarChart } from "@mui/x-charts";
+import { LineChart } from "@mui/x-charts";
+import { PieChart } from "@mui/x-charts";
 
-export default function BasicLineChart() {
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: "#fff",
+  ...theme.typography.body2,
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  ...theme.applyStyles("dark", {
+    backgroundColor: "#1A2027",
+  }),
+}));
+
+export default function FullWidthGrid() {
   return (
-    <>
-      <Box sx={{ width: "100%" }}>
-        <Grid container rowSpacing={10}>
-          <Grid size={5}>
+    <Box>
+      <Grid container spacing={0.5}>
+        <Grid item size="auto">
+          <Item>
             <Typography variant="h5" align="center" gutterBottom>
               Situación de estudiantes por programa educativo
             </Typography>
@@ -21,17 +33,18 @@ export default function BasicLineChart() {
                 { data: [51, 6, 49, 30] },
                 { data: [15, 25, 30, 50] },
               ]}
-              height={400}
-              width={600}
+              height={300}
+              width={800}
               xAxis={[{ data: ["CBeI", "EyN", "TyGH"], scaleType: "band" }]}
-              margin={{ top: 10, bottom: 30, left: 100, right: 10 }}
+              margin={{ top: 5, bottom: 30, left: 65, right: 30 }}
             />
-          </Grid>
-          <Grid size={5}>
+          </Item>
+        </Grid>
+        <Grid item size="auto">
+          <Item>
             <Typography variant="h5" align="center" gutterBottom>
               Crecimiento de la matrícula por semestre
             </Typography>
-
             <LineChart
               xAxis={[{ data: [100, 200, 300, 500, 600] }]}
               series={[
@@ -40,30 +53,36 @@ export default function BasicLineChart() {
                 },
               ]}
               height={400}
-              width={600}
-              margin={{ top: 10, bottom: 30, left: 100, right: 10 }}
+              width={700}
+              margin={{ top: 5, bottom: 30, left: 65, right: 30 }}
             />
-          </Grid>
-          <Grid>
+          </Item>
+        </Grid>
+        <Grid item size="auto">
+          <Item>
+            <Typography variant="h5" align="center" gutterBottom>
+              Estado general de alumnos
+            </Typography>
             <PieChart
               series={[
                 {
                   data: [
-                    { id: 0, value: 10, label: "series A" },
-                    { id: 1, value: 15, label: "series B" },
-                    { id: 2, value: 20, label: "series C" },
+                    { id: 0, value: 10, label: "Inscrito" },
+                    { id: 1, value: 15, label: "Baja temporal" },
+                    { id: 2, value: 20, label: "Baja definitiva" },
                   ],
                 },
               ]}
-              width={400}
-              height={200}
+              height={400}
+              width={500}
+              margin={{ top: 5, bottom: 30, left: 65, right: 30 }}
             />
-          </Grid>
-          <Grid size={6}>
-            <InputFileUpload></InputFileUpload>
-          </Grid>
+          </Item>
         </Grid>
-      </Box>
-    </>
+        <Grid item size="auto">
+          <Item>Por ajustar jijijija</Item>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
