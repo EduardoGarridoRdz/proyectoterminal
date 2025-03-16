@@ -1,9 +1,18 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+
 from .models import *
 from .serializers import *
-from rest_framework.response import Response
 
+from rest_framework.response import Response
+from django.http import JsonResponse
+from rest_framework.parsers import MultiPartParser
+from rest_framework.decorators import action
+
+import pandas as pd
+import io
+
+########## ESTUDIANTES #####################
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
@@ -71,3 +80,40 @@ class TutoriaViewSet(viewsets.ModelViewSet):
 class VinculacionAcadViewSet(viewsets.ModelViewSet):
         queryset = VinculacionAcad.objects.all()
         serializer_class = VinculacionAcadSerializer
+
+import pandas as pd
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
+
+class ExcelUploadViewSet(viewsets.ViewSet):
+    parser_classes = [MultiPartParser]
+
+    @action(detail=False, methods=['post'])
+    def upload_excel(self, request):
+        if 'file' not in request.FILES:
+            return Response({'status': 'error', 'message': 'No file uploaded'}, status=400)
+
+        excel_file = request.FILES['file']
+        try:
+            # Leer el archivo Excel con Pandas
+            df = pd.read_excel(excel_file)
+
+            # Convertir el DataFrame a un diccionario
+            data = df.to_dict(orient='records')  # 'records' devuelve una lista de diccionarios
+
+            # Respuesta exitosa
+            return Response({
+                'status': 'success',
+                'message': 'File processed successfully',
+                'data': data,
+            })
+        except Exception as e:
+            # Manejo de errores
+            return Response({
+                'status': 'error',
+                'message': str(e),
+            }, status=400)
+#---------------------------------------------------------#
+

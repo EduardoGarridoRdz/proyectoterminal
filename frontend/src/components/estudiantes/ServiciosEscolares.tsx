@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -7,6 +6,7 @@ import { Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 import { LineChart } from "@mui/x-charts";
 import { PieChart } from "@mui/x-charts";
+import ExcelUploader from "./SubirExcel";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -80,7 +80,9 @@ export default function FullWidthGrid() {
           </Item>
         </Grid>
         <Grid item size="auto">
-          <Item>Por ajustar jijijija</Item>
+          <Item>
+            <ExcelUploader />
+          </Item>
         </Grid>
       </Grid>
     </Box>

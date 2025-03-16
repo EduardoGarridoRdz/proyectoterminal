@@ -21,7 +21,7 @@ router.register(r'situacion', SituacionViewSet)
 router.register(r'taller', TallerViewSet)
 router.register(r'tutoria', TutoriaViewSet)
 router.register(r'vinculacionAcad', VinculacionAcadViewSet)
-
+router.register(r'subir_excel', ExcelUploadViewSet, basename='subir_excel')
 
 
 urlpatterns = [

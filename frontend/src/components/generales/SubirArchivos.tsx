@@ -1,4 +1,3 @@
-///import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -15,7 +14,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 0.1,
 });
 
-export default function InputFileUpload() {
+export default function SubirArchivo() {
   return (
     <Button
       component="label"
