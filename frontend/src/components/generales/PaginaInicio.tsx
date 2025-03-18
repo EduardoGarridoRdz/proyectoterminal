@@ -5,6 +5,7 @@ import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import getNavigation from "./Navegacion";
 import { useDemoRouter } from "@toolpad/core/internal";
 import BasicLineChart from "../estudiantes/ServiciosEscolares";
+import DashboardProfesores from "../profesores/DashboardProfesores";
 
 const NAVIGATION = getNavigation();
 
@@ -32,13 +33,16 @@ const demoTheme = createTheme({
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
     <>
+      <Typography>{pathname}</Typography>
       {pathname === "/estudiantes/dashboard-estudiantes" && (
         <BasicLineChart></BasicLineChart>
       )}
-      {pathname === "/dashboard" && (
-        <Typography>Bienvenido al Dashboard</Typography>
-      )}
+
+      {pathname === "/profesores/dashboard-profesor" && <DashboardProfesores />}
+
       {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
+
+      {pathname === "/profesores/desarrollo-humano" && <p> hola</p>}
     </>
   );
 }

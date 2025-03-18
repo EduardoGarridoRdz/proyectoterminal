@@ -1,18 +1,9 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-
-from .models import *
 from .serializers import *
+from .models import *
 
-from rest_framework.response import Response
-from django.http import JsonResponse
-from rest_framework.parsers import MultiPartParser
-from rest_framework.decorators import action
-
-import pandas as pd
-import io
-
-########## ESTUDIANTES #####################
+# <----------------------- ESTUDIANTES --------------------------> #
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
@@ -81,39 +72,32 @@ class VinculacionAcadViewSet(viewsets.ModelViewSet):
         queryset = VinculacionAcad.objects.all()
         serializer_class = VinculacionAcadSerializer
 
-import pandas as pd
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser
-from rest_framework.response import Response
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
-class ExcelUploadViewSet(viewsets.ViewSet):
-    parser_classes = [MultiPartParser]
-
-    @action(detail=False, methods=['post'])
-    def upload_excel(self, request):
-        if 'file' not in request.FILES:
-            return Response({'status': 'error', 'message': 'No file uploaded'}, status=400)
-
-        excel_file = request.FILES['file']
+@csrf_exempt
+def recibir_json(request):
+    if request.method == 'POST':
         try:
-            # Leer el archivo Excel con Pandas
-            df = pd.read_excel(excel_file)
+            # Leer el cuerpo de la solicitud (el JSON enviado desde el frontend)
+            data = json.loads(request.body)
+            
+            # Imprimir el JSON en la consola del servidor
+            print("JSON recibido:", data)
+            
 
-            # Convertir el DataFrame a un diccionario
-            data = df.to_dict(orient='records')  # 'records' devuelve una lista de diccionarios
-
-            # Respuesta exitosa
-            return Response({
-                'status': 'success',
-                'message': 'File processed successfully',
-                'data': data,
-            })
+            # Responder con un mensaje de éxito
+            return JsonResponse({'status': 'success', 'message': 'JSON recibido correctamente.'})
         except Exception as e:
-            # Manejo de errores
-            return Response({
-                'status': 'error',
-                'message': str(e),
-            }, status=400)
-#---------------------------------------------------------#
+            # Manejar errores
+            print("Error al procesar el JSON:", str(e))
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
 
+
+# <----------------------- PROFESORES --------------------------> #
+class ProfesorViewSet(viewsets.ModelViewSet):
+        queryset = Profesor.objects.all()
+        serializer_class = ProfesorSerializer

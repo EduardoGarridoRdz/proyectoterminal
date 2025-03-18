@@ -1,93 +1,88 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import readXlsxFile from "read-excel-file";
+import { Button } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { styled } from "@mui/material/styles";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api"; // Cambia esto por la URL de tu API de Django
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
-// Definimos la interfaz para la respuesta del backend
-interface ApiResponse {
-  status: string;
-  message: string;
-  data: Record<string, any>[]; // Los datos del Excel en formato de lista de diccionarios
-}
+const ExcelToJsonConverter: React.FC = () => {
+  const [jsonData, setJsonData] = useState<Array<Record<string, any>> | null>(
+    null
+  );
 
-// Función para subir un archivo Excel
-const uploadExcelFile = async (file: File): Promise<ApiResponse> => {
-  const formData = new FormData();
-  formData.append("file", file); // 'file' debe coincidir con el nombre esperado en el backend
-
-  try {
-    const response = await axios.post<ApiResponse>(
-      `${API_BASE_URL}/subir_excel/upload_excel/`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error uploading file:", error);
-    throw error;
-  }
-};
-
-const ExcelUploader: React.FC = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [response, setResponse] = useState<ApiResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  // Maneja el cambio de archivo seleccionado
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  // Maneja el envío del formulario
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
     if (!file) {
-      alert("Por favor, selecciona un archivo");
+      alert("Por favor, selecciona un archivo.");
       return;
     }
 
     try {
-      const result = await uploadExcelFile(file);
-      setResponse(result);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error desconocido");
-      setResponse(null);
+      // Leer el archivo Excel
+      const rows = await readXlsxFile(file);
+
+      // Mostrar el JSON en la consola
+      console.log("Datos convertidos a JSON:", rows);
+
+      // Guardar el JSON en el estado (opcional, si quieres mostrarlo en la UI)
+      setJsonData(rows);
+
+      // Enviar el JSON al backend
+      const response = await fetch("http://127.0.0.1:8000/api/recibirDatos/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(rows), // Envía el JSON como cuerpo de la solicitud
+      });
+
+      if (response.ok) {
+        console.log("JSON enviado correctamente al backend.");
+      } else {
+        console.error("Error al enviar el JSON al backend.");
+      }
+    } catch (error) {
+      console.error("Error al leer el archivo o enviar el JSON:", error);
+      alert("Hubo un error al procesar el archivo.");
     }
   };
 
   return (
-    <div>
-      <h1>Subir Archivo Excel</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-        <button type="submit">Subir Archivo</button>
-      </form>
+    <Button
+      component="label"
+      role={undefined}
+      variant="contained"
+      tabIndex={-1}
+      startIcon={<CloudUploadIcon />}
+    >
+      Subir archivos
+      <VisuallyHiddenInput type="file" onChange={handleFileChange} multiple />
+    </Button>
 
-      {response && (
+    /*<div>
+      <h1>Cargar y convertir archivo Excel a JSON</h1>
+      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+      {jsonData && (
         <div>
-          <h2>Respuesta del servidor:</h2>
-          <p>Estado: {response.status}</p>
-          <p>Mensaje: {response.message}</p>
-          <h3>Datos del Excel:</h3>
-          <pre>{JSON.stringify(response.data, null, 2)}</pre>
+          <h2>Datos convertidos:</h2>
+          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
         </div>
       )}
-
-      {error && (
-        <div style={{ color: "red" }}>
-          <h2>Error:</h2>
-          <p>{error}</p>
-        </div>
-      )}
-    </div>
+    </div>*/
   );
 };
 
-export default ExcelUploader;
+export default ExcelToJsonConverter;

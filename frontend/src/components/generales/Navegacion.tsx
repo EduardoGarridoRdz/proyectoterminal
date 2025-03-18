@@ -78,11 +78,51 @@ const getNavigation = (): Navigation => {
         },
       ],
     },
+
+    // Profesores departamentos
     {
       segment: "profesores",
       title: "Profesores",
       icon: <Person4Icon />,
+
+      children: [
+        {
+          segment: "dashboard-profesor",
+          title: "Dashboard Profesores",
+        },
+
+        {
+          segment: "desarrollo-humano",
+          title: "Desarrollo Humano",
+        },
+
+        {
+          segment: "ciencias-basicas",
+          title: "Ciencias básicas de ingeniería",
+        },
+
+        {
+          segment: "turismo-sustentable",
+          title: "Turismo sustentable y gestión",
+        },
+
+        {
+          segment: "servicicios-escolares",
+          title: "Servicios escolares",
+        },
+
+        {
+          segment: "tutorias",
+          title: "Tutorías",
+        },
+
+        {
+          segment: "desarrollo-académico",
+          title: "Desarrollo académico",
+        },
+      ],
     },
+
     {
       kind: "divider",
     },
@@ -90,6 +130,7 @@ const getNavigation = (): Navigation => {
       kind: "header",
       title: "Configuraciones",
     },
+
     {
       segment: "administrar-usuarios",
       title: "Administrar Usuarios",

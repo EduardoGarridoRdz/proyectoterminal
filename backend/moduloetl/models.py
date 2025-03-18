@@ -5,11 +5,14 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+
+# las tablas están listadas en orden alfabético
+
 from django.db import models
 
 
 class Actividadesinactivo(models.Model):
-    id_actividad = models.IntegerField(primary_key=True)
+    id_actividad = models.AutoField(primary_key=True)
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
     cartaautorizacion = models.BinaryField()
     institucion = models.CharField(max_length=255)
@@ -60,7 +63,7 @@ class AsesoriaInt(models.Model):
 
 
 class Asignatura(models.Model):
-    id_asignatura = models.IntegerField(primary_key=True)
+    id_asignatura = models.AutoField(primary_key=True)
     nombre_asignatura = models.CharField(max_length=255)
     id_plan_acad = models.ForeignKey('PlanAcad', models.DO_NOTHING, db_column='id_plan_acad')
     clave = models.CharField(max_length=255)
@@ -70,77 +73,8 @@ class Asignatura(models.Model):
         db_table = 'asignatura'
 
 
-class AuthGroup(models.Model):
-    name = models.CharField(unique=True, max_length=150)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group'
-
-
-class AuthGroupPermissions(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
-
-
-class AuthPermission(models.Model):
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
-    codename = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
-
-
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
-    date_joined = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user'
-
-
-class AuthUserGroups(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
-
-
-class AuthUserUserPermissions(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
-
-
 class Capacitacion(models.Model):
-    id_capacitacion = models.IntegerField(primary_key=True)
+    id_capacitacion = models.AutoField(primary_key=True)
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
     id_tipo_capacitacion = models.ForeignKey('TipoCapacitacion', models.DO_NOTHING, db_column='id_tipo_capacitacion')
     evento = models.CharField(max_length=30)
@@ -155,7 +89,7 @@ class Capacitacion(models.Model):
 
 
 class Ciudad(models.Model):
-    id_ciudad = models.IntegerField(primary_key=True)
+    id_ciudad = models.AutoField(primary_key=True)
     id_estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='id_estado')
     id_pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='id_pais')
     nombre_ciudad = models.CharField(max_length=50)
@@ -166,7 +100,7 @@ class Ciudad(models.Model):
 
 
 class Contrasea(models.Model):
-    id_contrasena = models.IntegerField(primary_key=True)
+    id_contrasena = models.AutoField(primary_key=True)
     contrasena = models.CharField(max_length=255)
 
     class Meta:
@@ -175,7 +109,7 @@ class Contrasea(models.Model):
 
 
 class Departamento(models.Model):
-    id_departamento = models.IntegerField(primary_key=True)
+    id_departamento = models.AutoField(primary_key=True)
     nombre_departamento = models.CharField(max_length=255)
 
     class Meta:
@@ -183,53 +117,8 @@ class Departamento(models.Model):
         db_table = 'departamento'
 
 
-class DjangoAdminLog(models.Model):
-    action_time = models.DateTimeField()
-    object_id = models.TextField(blank=True, null=True)
-    object_repr = models.CharField(max_length=200)
-    action_flag = models.SmallIntegerField()
-    change_message = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'django_admin_log'
-
-
-class DjangoContentType(models.Model):
-    app_label = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'django_content_type'
-        unique_together = (('app_label', 'model'),)
-
-
-class DjangoMigrations(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    app = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    applied = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_migrations'
-
-
-class DjangoSession(models.Model):
-    session_key = models.CharField(primary_key=True, max_length=40)
-    session_data = models.TextField()
-    expire_date = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'django_session'
-
-
 class Egresado(models.Model):
-    id_egresado = models.IntegerField(primary_key=True)
+    id_egresado = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey('Estudiante', models.DO_NOTHING, db_column='id_estudiante')
     email = models.CharField(max_length=50)
     telefono = models.CharField(max_length=10)
@@ -242,7 +131,7 @@ class Egresado(models.Model):
 
 
 class Estado(models.Model):
-    id_estado = models.IntegerField(primary_key=True)
+    id_estado = models.AutoField(primary_key=True)
     nombre_estado = models.CharField(max_length=255)
 
     class Meta:
@@ -251,7 +140,7 @@ class Estado(models.Model):
 
 
 class EstadoServicio(models.Model):
-    id_estado = models.IntegerField(primary_key=True)
+    id_estado = models.AutoField(primary_key=True)
     estado = models.CharField(max_length=15)
 
     class Meta:
@@ -260,7 +149,7 @@ class EstadoServicio(models.Model):
 
 
 class Estancia(models.Model):
-    id_estancia = models.IntegerField(primary_key=True)
+    id_estancia = models.AutoField(primary_key=True)
     id_tipo_estancia = models.ForeignKey('TipoEstancia', models.DO_NOTHING, db_column='id_tipo_estancia')
     id_ciudad = models.ForeignKey(Ciudad, models.DO_NOTHING, db_column='id_ciudad')
 
@@ -270,7 +159,7 @@ class Estancia(models.Model):
 
 
 class Estatus(models.Model):
-    id_estatus = models.IntegerField(primary_key=True)
+    id_estatus = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=15)
 
     class Meta:
@@ -279,7 +168,7 @@ class Estatus(models.Model):
 
 
 class Estudiante(models.Model):
-    id_estudiante = models.IntegerField(primary_key=True)
+    id_estudiante = models.AutoField(primary_key=True)
     matricula = models.CharField(unique=True, max_length=10)
     nombre = models.CharField(max_length=40)
     apellido_pat = models.CharField(max_length=30)
@@ -307,7 +196,7 @@ class Estudiante(models.Model):
 
 
 class Estudios(models.Model):
-    id_estudios = models.IntegerField(primary_key=True)
+    id_estudios = models.AutoField(primary_key=True)
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
     grado_actual = models.CharField(max_length=255)
     grado_estudiando = models.CharField(max_length=255)
@@ -321,7 +210,7 @@ class Estudios(models.Model):
 
 
 class EventoAcad(models.Model):
-    id_evento_acad = models.IntegerField(primary_key=True)
+    id_evento_acad = models.AutoField(primary_key=True)
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
     id_tipo_evento = models.ForeignKey('TipoEvento', models.DO_NOTHING, db_column='id_tipo_evento')
     id_evento_subcategoria = models.ForeignKey('EventoSubcategoria', models.DO_NOTHING, db_column='id_evento_subcategoria')
@@ -335,7 +224,7 @@ class EventoAcad(models.Model):
 
 
 class EventoSubcategoria(models.Model):
-    id_evento_subcategoria = models.IntegerField(primary_key=True)
+    id_evento_subcategoria = models.AutoField(primary_key=True)
     subcategoria = models.CharField(max_length=30)
 
     class Meta:
@@ -344,7 +233,7 @@ class EventoSubcategoria(models.Model):
 
 
 class Excursion(models.Model):
-    id_excursion = models.IntegerField(primary_key=True)
+    id_excursion = models.AutoField(primary_key=True)
     tipo_excursion = models.BooleanField()
     id_asignatura = models.ForeignKey(Asignatura, models.DO_NOTHING, db_column='id_asignatura')
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
@@ -360,7 +249,7 @@ class Excursion(models.Model):
 
 
 class FaseProyecto(models.Model):
-    id_fase_proyecto = models.IntegerField(primary_key=True)
+    id_fase_proyecto = models.AutoField(primary_key=True)
     fase = models.CharField(max_length=30)
 
     class Meta:
@@ -369,7 +258,7 @@ class FaseProyecto(models.Model):
 
 
 class GradoAcademico(models.Model):
-    id_grado_academico = models.IntegerField(primary_key=True)
+    id_grado_academico = models.AutoField(primary_key=True)
     grado_academico = models.CharField(max_length=255)
 
     class Meta:
@@ -378,7 +267,7 @@ class GradoAcademico(models.Model):
 
 
 class GradoAsesoria(models.Model):
-    id_grado_asesoria = models.IntegerField(primary_key=True)
+    id_grado_asesoria = models.AutoField(primary_key=True)
     grado = models.CharField(max_length=255)
 
     class Meta:
@@ -387,7 +276,7 @@ class GradoAsesoria(models.Model):
 
 
 class Idioma(models.Model):
-    id_idioma = models.IntegerField(primary_key=True)
+    id_idioma = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='estudiante')
     nivel = models.IntegerField()
     acreditado = models.BooleanField()
@@ -400,7 +289,7 @@ class Idioma(models.Model):
 
 
 class Investigacion(models.Model):
-    id_investigacion = models.IntegerField(primary_key=True)
+    id_investigacion = models.AutoField(primary_key=True)
     tipo_producto = models.ForeignKey('TipoProducto', models.DO_NOTHING, db_column='tipo_producto')
     isbn = models.CharField(max_length=255)
     objeto_estudio = models.CharField(max_length=255)
@@ -415,7 +304,7 @@ class Investigacion(models.Model):
 
 
 class NombreTaller(models.Model):
-    id_nombre_taller = models.IntegerField(primary_key=True)
+    id_nombre_taller = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30)
 
     class Meta:
@@ -424,7 +313,7 @@ class NombreTaller(models.Model):
 
 
 class Pais(models.Model):
-    id_pais = models.IntegerField(primary_key=True)
+    id_pais = models.AutoField(primary_key=True)
     nombre_pais = models.CharField(max_length=255)
 
     class Meta:
@@ -433,7 +322,7 @@ class Pais(models.Model):
 
 
 class PlanAcad(models.Model):
-    id_plan_acad = models.IntegerField(primary_key=True)
+    id_plan_acad = models.AutoField(primary_key=True)
     id_pro_edu = models.ForeignKey('ProEdu', models.DO_NOTHING, db_column='id_pro_edu')
     nombre_plan_acad = models.CharField(max_length=30)
 
@@ -443,7 +332,7 @@ class PlanAcad(models.Model):
 
 
 class PracticaProf(models.Model):
-    id_practica_prof = models.IntegerField(primary_key=True)
+    id_practica_prof = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
     num_practicas = models.IntegerField()
     fecha_inicio = models.DateField()
@@ -457,7 +346,7 @@ class PracticaProf(models.Model):
 
 
 class ProEdu(models.Model):
-    id_pro_edu = models.IntegerField(primary_key=True)
+    id_pro_edu = models.AutoField(primary_key=True)
     nombre_pro_edu = models.CharField(max_length=60)
 
     class Meta:
@@ -466,7 +355,7 @@ class ProEdu(models.Model):
 
 
 class Profesor(models.Model):
-    id_profesor = models.IntegerField(primary_key=True)
+    id_profesor = models.AutoField(primary_key=True)
     id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario')
     nombre = models.CharField(max_length=30)
     apellido_pat = models.CharField(max_length=30)
@@ -523,7 +412,7 @@ class ProfesorProyecto(models.Model):
 
 
 class Proyecto(models.Model):
-    id_proyecto = models.IntegerField(primary_key=True)
+    id_proyecto = models.AutoField(primary_key=True)
     nombre_proyecto = models.CharField(max_length=255)
     tipo_proyecto = models.ForeignKey('TipoProyecto', models.DO_NOTHING, db_column='tipo_proyecto')
     objetivo = models.CharField(max_length=255)
@@ -536,7 +425,7 @@ class Proyecto(models.Model):
 
 
 class ServicioSocial(models.Model):
-    id_servicio = models.IntegerField(primary_key=True)
+    id_servicio = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
     id_estado = models.ForeignKey(EstadoServicio, models.DO_NOTHING, db_column='id_estado')
     tipo_proyecto = models.CharField(max_length=255)
@@ -552,7 +441,7 @@ class ServicioSocial(models.Model):
 
 
 class Situacion(models.Model):
-    id_situacion = models.IntegerField(primary_key=True)
+    id_situacion = models.AutoField(primary_key=True)
     situacion = models.CharField(max_length=30)
 
     class Meta:
@@ -561,7 +450,7 @@ class Situacion(models.Model):
 
 
 class Taller(models.Model):
-    id_taller = models.IntegerField(primary_key=True)
+    id_taller = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
     tipo_taller = models.BooleanField()
     id_nombre_taller = models.ForeignKey(NombreTaller, models.DO_NOTHING, db_column='id_nombre_taller')
@@ -576,7 +465,7 @@ class Taller(models.Model):
 
 
 class TipoCapacitacion(models.Model):
-    id_tipo_capacitacion = models.IntegerField(primary_key=True)
+    id_tipo_capacitacion = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=15)
 
     class Meta:
@@ -585,7 +474,7 @@ class TipoCapacitacion(models.Model):
 
 
 class TipoEstancia(models.Model):
-    id_tipo_estancia = models.IntegerField(primary_key=True)
+    id_tipo_estancia = models.AutoField(primary_key=True)
     tipo_estancia = models.CharField(max_length=255)
 
     class Meta:
@@ -594,7 +483,7 @@ class TipoEstancia(models.Model):
 
 
 class TipoEvento(models.Model):
-    id_tipo_evento = models.IntegerField(primary_key=True)
+    id_tipo_evento = models.AutoField(primary_key=True)
     tipo_evento = models.CharField(max_length=30)
 
     class Meta:
@@ -603,7 +492,7 @@ class TipoEvento(models.Model):
 
 
 class TipoProducto(models.Model):
-    id_tipo_producto = models.IntegerField(primary_key=True)
+    id_tipo_producto = models.AutoField(primary_key=True)
     tipo_producto = models.CharField(max_length=255)
 
     class Meta:
@@ -612,7 +501,7 @@ class TipoProducto(models.Model):
 
 
 class TipoProfesor(models.Model):
-    id_tipo_profesor = models.IntegerField(primary_key=True)
+    id_tipo_profesor = models.AutoField(primary_key=True)
     tipo_profesor = models.IntegerField()
 
     class Meta:
@@ -621,7 +510,7 @@ class TipoProfesor(models.Model):
 
 
 class TipoProyecto(models.Model):
-    id_tipo_proyecto = models.IntegerField(primary_key=True)
+    id_tipo_proyecto = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=30)
 
     class Meta:
@@ -630,7 +519,7 @@ class TipoProyecto(models.Model):
 
 
 class Tipousuarios(models.Model):
-    id_tipo_usuario = models.IntegerField(primary_key=True)
+    id_tipo_usuario = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=255)
 
     class Meta:
@@ -639,7 +528,7 @@ class Tipousuarios(models.Model):
 
 
 class Tutoria(models.Model):
-    id_tutoria = models.IntegerField(primary_key=True)
+    id_tutoria = models.AutoField(primary_key=True)
     tipo_tutoria = models.BooleanField()
     id_profesor = models.ForeignKey(Profesor, models.DO_NOTHING, db_column='id_profesor')
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
@@ -656,7 +545,7 @@ class Tutoria(models.Model):
 
 
 class Usuario(models.Model):
-    id_usuario = models.IntegerField(primary_key=True)
+    id_usuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30)
     apellido_pat = models.CharField(max_length=30)
     apellido_mat = models.CharField(max_length=30)
@@ -671,7 +560,7 @@ class Usuario(models.Model):
 
 
 class VinculacionAcad(models.Model):
-    id_vinculacion_acad = models.IntegerField(primary_key=True)
+    id_vinculacion_acad = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
     institucion = models.CharField(max_length=255)
     fecha_inicio = models.DateField()

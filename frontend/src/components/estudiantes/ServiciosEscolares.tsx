@@ -6,7 +6,7 @@ import { Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 import { LineChart } from "@mui/x-charts";
 import { PieChart } from "@mui/x-charts";
-import ExcelUploader from "./SubirExcel";
+import ExcelToJsonConverter from "./SubirExcel";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -80,9 +80,7 @@ export default function FullWidthGrid() {
           </Item>
         </Grid>
         <Grid item size="auto">
-          <Item>
-            <ExcelUploader />
-          </Item>
+          <ExcelToJsonConverter></ExcelToJsonConverter>
         </Grid>
       </Grid>
     </Box>

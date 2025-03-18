@@ -1,57 +1,77 @@
-// src/components/MyComponent.tsx
-import React, { useEffect, useState } from "react";
-import { fetchData } from "../../API/api";
+import React, { useState } from "react";
+import { postData } from "../../API/api"; // Asegúrate de que la ruta sea correcta
 
-// Define las props del componente
-interface MyComponentProps {
-  endpoint: string; // Prop para el endpoint dinámico
-  title: string; // Prop para el título dinámico
-  dataKeys: string[]; // Prop para la clave del dato a mostrar
-}
+const PostDataComponent: React.FC = () => {
+  // Estado para manejar los datos del formulario
+  const [formData, setFormData] = useState({
+    nombre: "",
+  });
 
-const MyComponent: React.FC<MyComponentProps> = ({
-  endpoint,
-  title,
-  dataKeys,
-}) => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Estado para manejar la respuesta de la API
+  const [responseData, setResponseData] = useState<any>(null);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const result = await fetchData(endpoint); // Usa el endpoint dinámico
-        setData(result);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Estado para manejar errores
+  const [error, setError] = useState<string | null>(null);
 
-    getData();
-  }, [endpoint]); // Dependencia: si el endpoint cambia, se vuelve a ejecutar
+  // Estado para manejar el estado de carga
+  const [loading, setLoading] = useState<boolean>(false);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // Función para manejar cambios en los campos del formulario
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // Función para manejar el envío del formulario
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // Evita que el formulario se envíe de forma predeterminada
+    setLoading(true); // Indica que la carga ha comenzado
+    setError(null); // Limpia cualquier error previo
+
+    try {
+      // Llama a la función postData para enviar los datos al servidor
+      const result = await postData("nombreTaller/", formData); // Cambia "mi-endpoint" por tu endpoint real
+      setResponseData(result); // Guarda la respuesta de la API en el estado
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Error al enviar los datos"); // Guarda el error en el estado
+    } finally {
+      setLoading(false); // Indica que la carga ha terminado
+    }
+  };
 
   return (
     <div>
-      <h1>{title}</h1>
-      <ul>
-        {data.map((item, index) => (
-          <li key={index}>
-            {dataKeys.map((key) => (
-              <div key={key}>
-                <strong>{key}:</strong> {item[key]}
-              </div>
-            ))}
-          </li>
-        ))}
-      </ul>
+      <h1>Enviar datos a la API</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Nombre:</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleInputChange}
+          />
+        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Enviando..." : "Enviar datos"}
+        </button>
+      </form>
+      {error && <div style={{ color: "red" }}>Error: {error}</div>}{" "}
+      {/* Muestra un mensaje de error si existe */}
+      {responseData && (
+        <div>
+          <h2>Respuesta de la API:</h2>
+          <pre>{JSON.stringify(responseData, null, 2)}</pre>{" "}
+          {/* Muestra la respuesta de la API en formato JSON */}
+        </div>
+      )}
     </div>
   );
 };
 
-export default MyComponent;
+export default PostDataComponent;

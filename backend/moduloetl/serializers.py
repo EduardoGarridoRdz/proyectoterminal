@@ -1,7 +1,9 @@
 # miapp/serializers.py
 from rest_framework import serializers
-from .models import *  # Reemplaza con tu modelo
+from .models import * 
 
+
+# <----------------------- ESTUDIANTES --------------------------> #
 class CiudadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ciudad
@@ -16,6 +18,7 @@ class EstadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estado
         fields = '__all__'
+
 
 class EstadoServicioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,4 +88,10 @@ class TutoriaSerializer(serializers.ModelSerializer):
 class VinculacionAcadSerializer(serializers.ModelSerializer):
     class Meta:
         model = VinculacionAcad
+        fields = '__all__'
+
+# <----------------------- PROFESORES --------------------------> #
+class ProfesorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profesor
         fields = '__all__'

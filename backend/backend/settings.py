@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,26 +36,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'coreapi',
     'moduloetl',
-    'rest_framework'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://18.217.222.99:5173",
-    "http://172.31.1.13:5173/"  # Cambia esto por la URL de tu aplicación React
+CORS_ALLOWED_ORIGINS = [ 
+    'http://localhost:5173',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -88,20 +86,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'planeacion',  # Nombre de la base de datos
         'USER': 'postgres',  # Nombre de usuario
-        'PASSWORD': 'planeacion',  # Contraseña
+        'PASSWORD': 'equipo1',  # Contraseña
         'HOST': 'localhost',  # Host (usualmente 'localhost' o '127.0.0.1')
         'PORT': '5432',  # Puerto de PostgreSQL (por defecto es 5432)
     }
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',  # Asegura que las respuestas sean JSON
-    ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',  # Acepta solo solicitudes JSON
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [],      # Si no usas permisos
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 # Password validation
