@@ -15,7 +15,7 @@ export default function FullScreenDashboard() {
       }}
     >
       <Typography variant="h4" align="center" gutterBottom>
-        Dashboard de Looker Studio
+        Dashboard Profesores
       </Typography>
       <Box 
         sx={{ 

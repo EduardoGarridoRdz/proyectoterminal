@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'coreapi',
     'moduloetl',
+    'pandas',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [ 
     'http://localhost:5173',
+    'http://18.217.222.99:5173',
 ]
 
 ROOT_URLCONF = 'backend.urls'

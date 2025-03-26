@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import readXlsxFile from "read-excel-file";
 import { Button } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 
+// Estilos del botón //
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -16,46 +16,47 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const ExcelToJsonConverter: React.FC = () => {
-  const [jsonData, setJsonData] = useState<Array<Record<string, any>> | null>(
-    null
-  );
-
+const SubirExcel: React.FC = () => {
+  // Función para mandar el archivo al backend //
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (!file) {
+    const archivo = event.target.files?.[0];
+    // Se comprueba si se ha seleccionado un archivo //
+    if (!archivo) {
       alert("Por favor, selecciona un archivo.");
       return;
     }
 
     try {
-      // Leer el archivo Excel
-      const rows = await readXlsxFile(file);
+      // Se crea un objeto FormData //
+      const formData = new FormData();
+      // Se agrega el archivo al FormData //
+      formData.append("archivo", archivo);
 
-      // Mostrar el JSON en la consola
-      console.log("Datos convertidos a JSON:", rows);
+      // Se envía el archivo al backend //
+      const respuesta = await fetch(
+        "http://127.0.0.1:8000/api/ProcesarExcel/",
+        {
+          method: "POST",
+          // Enviar el FormData como cuerpo de la solicitud //
+          body: formData,
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
 
-      // Guardar el JSON en el estado (opcional, si quieres mostrarlo en la UI)
-      setJsonData(rows);
+      // Se recibe la respuesta del procesamiento del backend //
+      const respuestaJSON = await respuesta.json();
 
-      // Enviar el JSON al backend
-      const response = await fetch("http://127.0.0.1:8000/api/recibirDatos/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(rows), // Envía el JSON como cuerpo de la solicitud
-      });
-
-      if (response.ok) {
-        console.log("JSON enviado correctamente al backend.");
+      if (respuesta.ok) {
+        alert(respuestaJSON.message);
       } else {
-        console.error("Error al enviar el JSON al backend.");
+        alert(respuestaJSON.message);
       }
     } catch (error) {
-      console.error("Error al leer el archivo o enviar el JSON:", error);
+      console.error("Error al enviar el archivo:", error);
       alert("Hubo un error al procesar el archivo.");
     }
   };
@@ -63,26 +64,18 @@ const ExcelToJsonConverter: React.FC = () => {
   return (
     <Button
       component="label"
-      role={undefined}
       variant="contained"
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
     >
       Subir archivos
-      <VisuallyHiddenInput type="file" onChange={handleFileChange} multiple />
+      <VisuallyHiddenInput
+        type="file"
+        accept=".xlsx"
+        onChange={handleFileChange}
+      />
     </Button>
-
-    /*<div>
-      <h1>Cargar y convertir archivo Excel a JSON</h1>
-      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-      {jsonData && (
-        <div>
-          <h2>Datos convertidos:</h2>
-          <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-        </div>
-      )}
-    </div>*/
   );
 };
 
-export default ExcelToJsonConverter;
+export default SubirExcel;

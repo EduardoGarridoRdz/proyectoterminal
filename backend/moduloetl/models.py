@@ -95,7 +95,7 @@ class Ciudad(models.Model):
     nombre_ciudad = models.CharField(max_length=50)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ciudad'
 
 
@@ -104,7 +104,7 @@ class Contrasea(models.Model):
     contrasena = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'contrasea'
 
 
@@ -126,7 +126,7 @@ class Egresado(models.Model):
     red_social = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'egresado'
 
 
@@ -135,7 +135,7 @@ class Estado(models.Model):
     nombre_estado = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'estado'
 
 
@@ -191,7 +191,7 @@ class Estudiante(models.Model):
     creditos = models.IntegerField()
 
     class Meta:
-        managed = False
+        managed =   True
         db_table = 'estudiante'
 
 
@@ -278,13 +278,13 @@ class GradoAsesoria(models.Model):
 class Idioma(models.Model):
     id_idioma = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='estudiante')
-    nivel = models.IntegerField()
+    nivel = models.CharField(max_length=10)
     acreditado = models.BooleanField()
     asesorias = models.BooleanField()
     certificacion = models.CharField(max_length=60)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'idioma'
 
 
@@ -317,7 +317,7 @@ class Pais(models.Model):
     nombre_pais = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'pais'
 
 
@@ -341,7 +341,7 @@ class PracticaProf(models.Model):
     contratado = models.BooleanField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'practica_prof'
 
 
@@ -431,12 +431,13 @@ class ServicioSocial(models.Model):
     tipo_proyecto = models.CharField(max_length=255)
     nombre_proyecto = models.CharField(max_length=255)
     beneficiarios = models.CharField(max_length=255)
+    
     evidencias = models.BinaryField()
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'servicio_social'
 
 
@@ -460,7 +461,7 @@ class Taller(models.Model):
     club = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'taller'
 
 
@@ -523,7 +524,7 @@ class Tipousuarios(models.Model):
     tipo = models.CharField(max_length=255)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'tipousuarios'
 
 
@@ -540,7 +541,7 @@ class Tutoria(models.Model):
     fecha_final = models.DateField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'tutoria'
 
 
@@ -555,7 +556,7 @@ class Usuario(models.Model):
     id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='id_departamento')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'usuario'
 
 
@@ -572,5 +573,5 @@ class VinculacionAcad(models.Model):
     id_ciudad = models.ForeignKey(Ciudad, models.DO_NOTHING, db_column='id_ciudad')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'vinculacion_acad'

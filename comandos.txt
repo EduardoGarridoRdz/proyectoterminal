@@ -3,13 +3,13 @@ cd frontend
 npm run dev
 
 <----- Compilar el backend ----->
-cd backend
 source venv/bin/activate
 python3 manage.py runserver
 
 <----- Entrar a la base de datos ------->
 Admin: postgres
 Contraseña: equipo1
+Puerto: 5432
 sudo -i -u postgres
 psql -d planeacion
 

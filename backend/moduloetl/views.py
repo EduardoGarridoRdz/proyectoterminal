@@ -2,15 +2,17 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import *
 from .models import *
+from .procesamiento import RecibirArchivo
+from django.views.decorators.csrf import csrf_exempt
 
-# <----------------------- ESTUDIANTES --------------------------> #
+""" <----------------------- ESTUDIANTES --------------------------> """
 class CiudadViewSet(viewsets.ModelViewSet):
     queryset = Ciudad.objects.all()
     serializer_class = CiudadSerializer
 
 class EgresadoViewSet(viewsets.ModelViewSet):
         queryset = Egresado.objects.all()
-        serializer_class = CiudadSerializer
+        serializer_class = EgresadoSerializer
 
 class EstadoViewSet(viewsets.ModelViewSet):
         queryset = Estado.objects.all()
@@ -72,32 +74,112 @@ class VinculacionAcadViewSet(viewsets.ModelViewSet):
         queryset = VinculacionAcad.objects.all()
         serializer_class = VinculacionAcadSerializer
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 
-@csrf_exempt
-def recibir_json(request):
-    if request.method == 'POST':
-        try:
-            # Leer el cuerpo de la solicitud (el JSON enviado desde el frontend)
-            data = json.loads(request.body)
-            
-            # Imprimir el JSON en la consola del servidor
-            print("JSON recibido:", data)
-            
-
-            # Responder con un mensaje de éxito
-            return JsonResponse({'status': 'success', 'message': 'JSON recibido correctamente.'})
-        except Exception as e:
-            # Manejar errores
-            print("Error al procesar el JSON:", str(e))
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Método no permitido.'}, status=405)
-
-
-# <----------------------- PROFESORES --------------------------> #
+""" <----------------------- PROFESORES --------------------------> """
 class ProfesorViewSet(viewsets.ModelViewSet):
         queryset = Profesor.objects.all()
         serializer_class = ProfesorSerializer
+
+class ProyectoViewSet(viewsets.ModelViewSet):
+    queryset = Proyecto.objects.all()
+    serializer_class = ProyectoSerializer
+
+class TipoEstanciaViewSet(viewsets.ModelViewSet):
+    queryset = TipoEstancia.objects.all()
+    serializer_class = TipoEstanciaSerializer
+
+class AsesoriaViewSet(viewsets.ModelViewSet):
+    queryset = Asesoria.objects.all()
+    serializer_class = AsesoriaSerializer
+
+class EstanciaViewSet(viewsets.ModelViewSet):
+    queryset = Estancia.objects.all()
+    serializer_class = EstanciaSerializer
+
+class TutoriaViewSet(viewsets.ModelViewSet):
+    queryset = Tutoria.objects.all()
+    serializer_class = TutoriaSerializer
+
+class TipoProductoViewSet(viewsets.ModelViewSet):
+    queryset = TipoProducto.objects.all()
+    serializer_class = TipoProductoSerializer
+
+class InvestigacionViewSet(viewsets.ModelViewSet):
+    queryset = Investigacion.objects.all()
+    serializer_class = InvestigacionSerializer
+
+class ExcursionViewSet(viewsets.ModelViewSet):
+    queryset = Excursion.objects.all()
+    serializer_class = ExcursionSerializer
+
+class AsignaturaViewSet(viewsets.ModelViewSet):
+    queryset = Asignatura.objects.all()
+    serializer_class = AsignaturaSerializer
+
+class CapacitacionViewSet(viewsets.ModelViewSet):
+    queryset = Capacitacion.objects.all()
+    serializer_class = CapacitacionSerializer
+
+class TipoCapacitacionViewSet(viewsets.ModelViewSet):
+    queryset = TipoCapacitacion.objects.all()
+    serializer_class = TipoCapacitacionSerializer
+
+class TipoEventoViewSet(viewsets.ModelViewSet):
+    queryset = TipoEvento.objects.all()
+    serializer_class = TipoEventoSerializer
+
+class EventoSubcategoriaViewSet(viewsets.ModelViewSet):
+    queryset = EventoSubcategoria.objects.all()
+    serializer_class = EventoSubcategoriaSerializer
+
+class TipoProyectoViewSet(viewsets.ModelViewSet):
+    queryset = TipoProyecto.objects.all()
+    serializer_class = TipoProyectoSerializer
+
+class ProfesorProyectoViewSet(viewsets.ModelViewSet):
+    queryset = ProfesorProyecto.objects.all()
+    serializer_class = ProfesorProyectoSerializer
+
+class FaseProyectoViewSet(viewsets.ModelViewSet):
+    queryset = FaseProyecto.objects.all()
+    serializer_class = FaseProyectoSerializer
+
+class AsesoriaIntViewSet(viewsets.ModelViewSet):
+    queryset = AsesoriaInt.objects.all()
+    serializer_class = AsesoriaIntSerializer
+
+class AsesoriaExtViewSet(viewsets.ModelViewSet):
+    queryset = AsesoriaExt.objects.all()
+    serializer_class = AsesoriaExtSerializer
+
+class ProfesorEstanciaViewSet(viewsets.ModelViewSet):
+    queryset = ProfesorEstancia.objects.all()
+    serializer_class = ProfesorEstanciaSerializer
+
+class ProfesorInvestigacionViewSet(viewsets.ModelViewSet):
+    queryset = ProfesorInvestigacion.objects.all()
+    serializer_class = ProfesorInvestigacionSerializer
+
+class TipoProfesorViewSet(viewsets.ModelViewSet):
+    queryset = TipoProfesor.objects.all()
+    serializer_class = TipoProfesorSerializer
+
+class EventoAcadViewSet(viewsets.ModelViewSet):
+    queryset = EventoAcad.objects.all()
+    serializer_class = EventoAcadSerializer
+
+class GradoAcademicoViewSet(viewsets.ModelViewSet):
+    queryset = GradoAcademico.objects.all()
+    serializer_class = GradoAcademicoSerializer
+
+class EstudiosViewSet(viewsets.ModelViewSet):
+    queryset = Estudios.objects.all()
+    serializer_class = EstudiosSerializer
+
+class GradoAsesoriaViewSet(viewsets.ModelViewSet):
+    queryset = GradoAsesoria.objects.all()
+    serializer_class = GradoAsesoriaSerializer
+
+class ActividadesinactivoViewSet(viewsets.ModelViewSet):
+    queryset = Actividadesinactivo.objects.all()
+    serializer_class = ActividadesinactivoSerializer

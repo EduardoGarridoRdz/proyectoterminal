@@ -2,8 +2,7 @@
 from rest_framework import serializers
 from .models import * 
 
-
-# <----------------------- ESTUDIANTES --------------------------> #
+""" <----------------------- ESTUDIANTES --------------------------> """
 class CiudadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ciudad
@@ -90,8 +89,139 @@ class VinculacionAcadSerializer(serializers.ModelSerializer):
         model = VinculacionAcad
         fields = '__all__'
 
-# <----------------------- PROFESORES --------------------------> #
+""" <----------------------- PROFESORES --------------------------> """
+
 class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesor
+        fields = '__all__'
+
+class ProyectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proyecto
+        fields = '__all__'
+
+class TipoEstanciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoEstancia
+        fields = '__all__'
+
+class AsesoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asesoria
+        fields = '__all__'
+
+class EstanciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Estancia
+        fields = '__all__'
+
+class TutoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tutoria
+        fields = '__all__'
+
+class TipoProductoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoProducto
+        fields = '__all__'
+
+class InvestigacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Investigacion
+        fields = '__all__'
+
+class ExcursionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Excursion
+        fields = '__all__'
+
+class AsignaturaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asignatura
+        fields = '__all__'
+
+class CapacitacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Capacitacion
+        fields = '__all__'
+
+class TipoCapacitacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoCapacitacion
+        fields = '__all__'
+
+class TipoEventoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoEvento
+        fields = '__all__'
+
+class EventoSubcategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventoSubcategoria
+        fields = '__all__'
+
+class TipoProyectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoProyecto
+        fields = '__all__'
+
+class ProfesorProyectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfesorProyecto
+        fields = '__all__'
+
+class FaseProyectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FaseProyecto
+        fields = '__all__'
+
+class AsesoriaIntSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AsesoriaInt
+        fields = '__all__'
+
+class AsesoriaExtSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AsesoriaExt
+        fields = '__all__'
+
+class ProfesorEstanciaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfesorEstancia
+        fields = '__all__'
+
+class ProfesorInvestigacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfesorInvestigacion
+        fields = '__all__'
+
+class TipoProfesorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoProfesor
+        fields = '__all__'
+
+class EventoAcadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventoAcad
+        fields = '__all__'
+
+class GradoAcademicoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GradoAcademico
+        fields = '__all__'
+
+class EstudiosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Estudios
+        fields = '__all__'
+
+class GradoAsesoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GradoAsesoria
+        fields = '__all__'
+
+class ActividadesinactivoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actividadesinactivo
         fields = '__all__'

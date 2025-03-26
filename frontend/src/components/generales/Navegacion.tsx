@@ -53,7 +53,7 @@ const getNavigation = (): Navigation => {
           title: "Dashboard Estudiantes",
         },
         {
-          segment: "ServiciosEscolares",
+          segment: "servicios-escolares",
           title: "Servicios Escolares",
         },
         {
@@ -120,6 +120,12 @@ const getNavigation = (): Navigation => {
           segment: "desarrollo-académico",
           title: "Desarrollo académico",
         },
+      
+        {
+          segment: "economia-negocios",
+          title: "Economía y Negocios",
+        },
+
       ],
     },
 

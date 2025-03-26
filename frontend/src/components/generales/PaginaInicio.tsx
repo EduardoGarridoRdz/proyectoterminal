@@ -4,8 +4,10 @@ import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import getNavigation from "./Navegacion";
 import { useDemoRouter } from "@toolpad/core/internal";
-import BasicLineChart from "../estudiantes/ServiciosEscolares";
+import ServiciosEscolares from "../estudiantes/ServiciosEscolares";
 import DashboardProfesores from "../profesores/DashboardProfesores";
+import DashboardEstudiantes from "../estudiantes/DashboardEstudiantes";
+import Estudiantes from "../estudiantes/Estudiantes";
 
 const NAVIGATION = getNavigation();
 
@@ -34,14 +36,15 @@ function DemoPageContent({ pathname }: { pathname: string }) {
   return (
     <>
       <Typography>{pathname}</Typography>
+      {pathname === "/estudiantes" && <Estudiantes />}
       {pathname === "/estudiantes/dashboard-estudiantes" && (
-        <BasicLineChart></BasicLineChart>
+        <DashboardEstudiantes />
       )}
-
+      {pathname === "/estudiantes/servicios-escolares" && (
+        <ServiciosEscolares />
+      )}
       {pathname === "/profesores/dashboard-profesor" && <DashboardProfesores />}
-
       {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
-
       {pathname === "/profesores/desarrollo-humano" && <p> hola</p>}
     </>
   );

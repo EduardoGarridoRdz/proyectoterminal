@@ -3,9 +3,12 @@ from django.urls import path, include
 from rest_framework.documentation import include_docs_urls
 from rest_framework import routers
 from .views import *
+from .procesamiento import RecibirArchivo
 
 router = routers.DefaultRouter()
-# <----------------------- ESTUDIANTES --------------------------> #
+
+
+""" <----------------------- ESTUDIANTES --------------------------> """
 router.register(r'ciudad', CiudadViewSet)
 router.register(r'egresado', EgresadoViewSet)
 router.register(r'estado', EstadoViewSet)
@@ -24,12 +27,38 @@ router.register(r'taller', TallerViewSet)
 router.register(r'tutoria', TutoriaViewSet)
 router.register(r'vinculacionAcad', VinculacionAcadViewSet)
 
-# <----------------------- PROFESORES --------------------------> #
+
+""" <----------------------- PROFESORES --------------------------> """
 router.register(r'profesores', ProfesorViewSet)
+router.register(r'proyectos', ProyectoViewSet)
+router.register(r'tipo_estancia', TipoEstanciaViewSet)
+router.register(r'asesorias', AsesoriaViewSet)
+router.register(r'estancias', EstanciaViewSet)
+router.register(r'tipo_producto', TipoProductoViewSet)
+router.register(r'investigaciones', InvestigacionViewSet)
+router.register(r'excursiones', ExcursionViewSet)
+router.register(r'asignaturas', AsignaturaViewSet)
+router.register(r'capacitaciones', CapacitacionViewSet)
+router.register(r'tipo_capacitacion', TipoCapacitacionViewSet)
+router.register(r'tipo_evento', TipoEventoViewSet)
+router.register(r'evento_subcategoria', EventoSubcategoriaViewSet)
+router.register(r'tipo_proyecto', TipoProyectoViewSet)
+router.register(r'profesor_proyecto', ProfesorProyectoViewSet)
+router.register(r'fase_proyecto', FaseProyectoViewSet)
+router.register(r'asesoria_int', AsesoriaIntViewSet)
+router.register(r'asesoria_ext', AsesoriaExtViewSet)
+router.register(r'profesor_estancia', ProfesorEstanciaViewSet)
+router.register(r'profesor_investigacion', ProfesorInvestigacionViewSet)
+router.register(r'tipo_profesor', TipoProfesorViewSet)
+router.register(r'evento_academico', EventoAcadViewSet)
+router.register(r'grado_academico', GradoAcademicoViewSet)
+router.register(r'estudios', EstudiosViewSet)
+router.register(r'grado_asesoria', GradoAsesoriaViewSet)
+router.register(r'actividades_inactivo', ActividadesinactivoViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)), 
     path('docs/', include_docs_urls(title="API DOCS")),
-    #Prueba para subir archivos excel
-    path('recibirDatos/', recibir_json, name='recibir_json')
+    path('ProcesarExcel/', RecibirArchivo)
 ]
