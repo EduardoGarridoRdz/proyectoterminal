@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ArticleIcon from "@mui/icons-material/Article";
 import { styled } from "@mui/material/styles";
 
 // Estilos del botón //
@@ -20,9 +20,10 @@ const BigButton = styled(Button)({
   fontSize: "5 rem",
   borderRadius: "5px",
   padding: "12px 15px",
+  backgroundColor: "#287233",
 });
 
-const SubirExcel: React.FC = () => {
+const DarFormato: React.FC = () => {
   // Función para mandar el archivo al backend //
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -42,7 +43,7 @@ const SubirExcel: React.FC = () => {
 
       // Se envía el archivo al backend //
       const respuesta = await fetch(
-        "http://127.0.0.1:8000/api/ProcesarExcel/",
+        "http://127.0.0.1:8000/api/FormatoArchivo/",
         {
           method: "POST",
           // Enviar el FormData como cuerpo de la solicitud //
@@ -53,14 +54,15 @@ const SubirExcel: React.FC = () => {
         }
       );
 
-      // Se recibe la respuesta del procesamiento del backend //
-      const respuestaJSON = await respuesta.json();
+      if (!respuesta.ok) throw new Error("Error al descargar el archivo");
 
-      if (respuesta.ok) {
-        alert(respuestaJSON.message);
-      } else {
-        alert(respuestaJSON.message);
-      }
+      // Se recibe la respuesta del procesamiento del backend //
+      const archivoFormateado = await respuesta.blob();
+      const url = window.URL.createObjectURL(archivoFormateado);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "reporte.xlsx";
+      a.click();
     } catch (error) {
       alert(`Hubo un error al procesar el archivo. ${error}`);
     }
@@ -70,10 +72,10 @@ const SubirExcel: React.FC = () => {
     <BigButton
       component="label"
       variant="contained"
-      startIcon={<CloudUploadIcon />}
+      startIcon={<ArticleIcon />}
       tabIndex={-1}
     >
-      Subir archivos
+      Dar formato
       <VisuallyHiddenInput
         type="file"
         accept=".xlsx"
@@ -83,4 +85,4 @@ const SubirExcel: React.FC = () => {
   );
 };
 
-export default SubirExcel;
+export default DarFormato;

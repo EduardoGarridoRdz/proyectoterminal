@@ -4,6 +4,8 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework import routers
 from .views import *
 from .procesamiento import RecibirArchivo
+from .views_formulario import guardar_formulario
+from .formato_archivo import FormatoArchivo
 
 router = routers.DefaultRouter()
 
@@ -25,6 +27,7 @@ router.register(r'servicioSocial', ServicioSociaLViewSet)
 router.register(r'situacion', SituacionViewSet)
 router.register(r'taller', TallerViewSet)
 router.register(r'tutoria', TutoriaViewSet)
+router.register(r'tipoingreso', TipoIngresoViewSet)
 router.register(r'vinculacionAcad', VinculacionAcadViewSet)
 
 
@@ -60,5 +63,8 @@ router.register(r'actividades_inactivo', ActividadesinactivoViewSet)
 urlpatterns = [
     path('', include(router.urls)), 
     path('docs/', include_docs_urls(title="API DOCS")),
-    path('ProcesarExcel/', RecibirArchivo)
-]
+    path('ProcesarExcel/', RecibirArchivo),
+    path('guardar_formulario/', guardar_formulario, name='guardar-formulario'),
+
+    path('FormatoArchivo/', FormatoArchivo),
+ ]

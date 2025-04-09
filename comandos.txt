@@ -10,15 +10,15 @@ python3 manage.py runserver
 Admin: postgres
 Contraseña: equipo1
 Puerto: 5432
+IP: 3.142.40.189
 sudo -i -u postgres
-psql -d planeacion
+psql -d planeacionv2
 
 <----- Github ---------->
 git add.
 git commit -m "Descripcion"
 git push
 
-
 <-------- DJANGO ADMIN --------->
 User: ubuntu
-Password: ubuntu
+Password: equipo1

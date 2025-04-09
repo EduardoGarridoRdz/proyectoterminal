@@ -1,30 +1,31 @@
-import { styled } from "@mui/material";
-import Paper from "@mui/material/Paper";
+import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid2";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  ...theme.typography.body2,
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
-
 export default function DashboardEstudiantes() {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Ajustamos las dimensiones del iframe con márgenes
+  const iframeWidth = Math.min(windowSize.width * 0.95, 1920); // 95% del ancho o máximo 1800px
+  const iframeHeight = Math.min(windowSize.height * 0.8, 1080); // 90% del alto o máximo 1000px
+
   return (
     <Grid container spacing={1}>
-      <Grid item size="auto">
-        <Item>
-          <iframe
-            width="1800"
-            height="1000"
-            src="https://lookerstudio.google.com/embed/reporting/d653d448-0ca3-497b-94b7-d018dee82059/page/R0QEF"
-            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-          ></iframe>
-        </Item>
-      </Grid>
+      <Grid item xs={12}></Grid>
     </Grid>
   );
 }

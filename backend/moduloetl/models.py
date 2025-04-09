@@ -5,9 +5,6 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-
-# las tablas están listadas en orden alfabético
-
 from django.db import models
 
 
@@ -38,7 +35,7 @@ class Asesoria(models.Model):
     recursos = models.BooleanField()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'asesoria'
 
 
@@ -99,13 +96,13 @@ class Ciudad(models.Model):
         db_table = 'ciudad'
 
 
-class Contrasea(models.Model):
+class Contrasena(models.Model):
     id_contrasena = models.AutoField(primary_key=True)
     contrasena = models.CharField(max_length=255)
 
     class Meta:
         managed = True
-        db_table = 'contrasea'
+        db_table = 'contrasena'
 
 
 class Departamento(models.Model):
@@ -144,7 +141,7 @@ class EstadoServicio(models.Model):
     estado = models.CharField(max_length=15)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'estado_servicio'
 
 
@@ -160,38 +157,43 @@ class Estancia(models.Model):
 
 class Estatus(models.Model):
     id_estatus = models.AutoField(primary_key=True)
-    estatus = models.CharField(max_length=15)
+    estatus = models.CharField(max_length=30)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'estatus'
 
 
 class Estudiante(models.Model):
     id_estudiante = models.AutoField(primary_key=True)
     matricula = models.CharField(unique=True, max_length=10)
-    nombre = models.CharField(max_length=40)
-    apellido_pat = models.CharField(max_length=30)
-    apellido_mat = models.CharField(max_length=30)
-    fecha_nac = models.DateField()
-    sexo = models.BooleanField()
+    nombre = models.CharField(max_length=60)
     curp = models.CharField(max_length=20)
-    email_personal = models.CharField(max_length=30)
+    direccion = models.CharField(max_length=60)
+    email_personal = models.CharField(max_length=60)
     telefono = models.CharField(max_length=10)
+    iems_procedencia = models.CharField(max_length=255)
+    generacion = models.CharField(max_length=255)
+    id_tipo_ingreso = models.ForeignKey('TipoIngreso', models.DO_NOTHING, db_column='id_tipo_ingreso')
+    fecha_ingreso = models.DateField()
     discapacidad = models.BooleanField()
     nombre_discapacidad = models.CharField(max_length=255)
-    hablante_indigena = models.BooleanField()
-    nombre_lengua = models.CharField(max_length=255)
-    iems_procedencia = models.CharField(max_length=255)
-    id_estatus = models.ForeignKey(Estatus, models.DO_NOTHING, db_column='id_estatus')
-    promedio = models.FloatField()
     id_pro_edu = models.ForeignKey('ProEdu', models.DO_NOTHING, db_column='id_pro_edu')
     id_situacion = models.ForeignKey('Situacion', models.DO_NOTHING, db_column='id_situacion')
-    generacion = models.CharField(max_length=255)
-    creditos = models.IntegerField()
+    motivo_situacion = models.CharField(max_length=255)
+    id_estatus = models.ForeignKey(Estatus, models.DO_NOTHING, db_column='id_estatus')
+    beca = models.BooleanField()
+    tipo_beca = models.CharField(max_length=255)
+    creditos = models.FloatField()
+    derecho_servicio_social = models.BooleanField()
+    fecha_nac = models.DateField()
+    sexo = models.BooleanField()
+    hablante_indigena = models.BooleanField()
+    nombre_lengua = models.CharField(max_length=255)
+    promedio = models.FloatField()
 
     class Meta:
-        managed =   True
+        managed = True
         db_table = 'estudiante'
 
 
@@ -239,7 +241,7 @@ class Excursion(models.Model):
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
     destino = models.CharField(max_length=255)
     objetivo = models.CharField(max_length=255)
-    evidencias = models.BinaryField()
+    evidencias = models.CharField()
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
 
@@ -278,10 +280,13 @@ class GradoAsesoria(models.Model):
 class Idioma(models.Model):
     id_idioma = models.AutoField(primary_key=True)
     estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='estudiante')
-    nivel = models.CharField(max_length=10)
+    idioma = models.CharField(max_length=255)
+    nivel = models.CharField(max_length=35)
     acreditado = models.BooleanField()
     asesorias = models.BooleanField()
     certificacion = models.CharField(max_length=60)
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
 
     class Meta:
         managed = True
@@ -305,10 +310,9 @@ class Investigacion(models.Model):
 
 class NombreTaller(models.Model):
     id_nombre_taller = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30)
-
+    nombre = models.CharField(max_length=40)
     class Meta:
-        managed = False
+        managed = True
         db_table = 'nombre_taller'
 
 
@@ -327,17 +331,18 @@ class PlanAcad(models.Model):
     nombre_plan_acad = models.CharField(max_length=30)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'plan_acad'
 
 
 class PracticaProf(models.Model):
     id_practica_prof = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
-    num_practicas = models.IntegerField()
+    num_practica = models.IntegerField()
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
     empresa = models.CharField(max_length=255)
+    telefon_empresa = models.CharField(max_length=15)
     contratado = models.BooleanField()
 
     class Meta:
@@ -350,7 +355,7 @@ class ProEdu(models.Model):
     nombre_pro_edu = models.CharField(max_length=60)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'pro_edu'
 
 
@@ -370,8 +375,9 @@ class Profesor(models.Model):
     id_actividad = models.ForeignKey(Actividadesinactivo, models.DO_NOTHING, db_column='id_actividad')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'profesor'
+
 
 
 class ProfesorEstancia(models.Model):
@@ -428,13 +434,17 @@ class ServicioSocial(models.Model):
     id_servicio = models.AutoField(primary_key=True)
     id_estudiante = models.ForeignKey(Estudiante, models.DO_NOTHING, db_column='id_estudiante')
     id_estado = models.ForeignKey(EstadoServicio, models.DO_NOTHING, db_column='id_estado')
-    tipo_proyecto = models.CharField(max_length=255)
+    tipo_proyecto = models.BooleanField()
+    clase_proyecto = models.CharField(max_length=40)
     nombre_proyecto = models.CharField(max_length=255)
     beneficiarios = models.CharField(max_length=255)
-    
     evidencias = models.BinaryField()
     fecha_inicio = models.DateField()
     fecha_final = models.DateField()
+    horas_acreditadas = models.IntegerField()
+    horas_pendientes = models.IntegerField()
+    horas_proyecto = models.IntegerField()
+    fecha_ultimo_reporte = models.DateField()
 
     class Meta:
         managed = True
@@ -446,7 +456,7 @@ class Situacion(models.Model):
     situacion = models.CharField(max_length=30)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'situacion'
 
 
@@ -458,6 +468,8 @@ class Taller(models.Model):
     representante = models.BooleanField()
     selectivo = models.BooleanField()
     acreditado = models.BooleanField()
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
     club = models.CharField(max_length=255)
 
     class Meta:
@@ -490,6 +502,15 @@ class TipoEvento(models.Model):
     class Meta:
         managed = False
         db_table = 'tipo_evento'
+
+
+class TipoIngreso(models.Model):
+    id_tipo_ingreso = models.AutoField(primary_key=True)
+    ingreso = models.CharField(max_length=255)
+
+    class Meta:
+        managed = True
+        db_table = 'tipo_ingreso'
 
 
 class TipoProducto(models.Model):
@@ -551,7 +572,7 @@ class Usuario(models.Model):
     apellido_pat = models.CharField(max_length=30)
     apellido_mat = models.CharField(max_length=30)
     correo = models.CharField(max_length=40)
-    id_contrasena = models.ForeignKey(Contrasea, models.DO_NOTHING, db_column='id_contrasena')
+    id_contrasena = models.ForeignKey(Contrasena, models.DO_NOTHING, db_column='id_contrasena')
     id_tipo_usuario = models.ForeignKey(Tipousuarios, models.DO_NOTHING, db_column='id_tipo_usuario')
     id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='id_departamento')
 
@@ -570,6 +591,7 @@ class VinculacionAcad(models.Model):
     beca = models.BooleanField()
     nombre_beca = models.CharField(max_length=255)
     tipo_vinculacion = models.BooleanField()
+    huesped = models.BooleanField()
     id_ciudad = models.ForeignKey(Ciudad, models.DO_NOTHING, db_column='id_ciudad')
 
     class Meta:

@@ -1,5 +1,4 @@
 import React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import SchoolIcon from "@mui/icons-material/School";
 import Person4Icon from "@mui/icons-material/Person4";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -38,11 +37,7 @@ const getNavigation = (): Navigation => {
       kind: "header",
       title: "Menú principal",
     },
-    {
-      segment: "dashboard-general",
-      title: "Dashboard General",
-      icon: <DashboardIcon />,
-    },
+
     {
       segment: "estudiantes",
       title: "Estudiantes",
@@ -69,8 +64,8 @@ const getNavigation = (): Navigation => {
           title: "Desarrollo Estudiantil",
         },
         {
-          segment: "desarrollo-académico",
-          title: "Desarrollo Académico",
+          segment: "idiomas",
+          title: "Idiomas",
         },
         {
           segment: "vinculacion-universitaria",
@@ -89,6 +84,10 @@ const getNavigation = (): Navigation => {
         {
           segment: "dashboard-profesor",
           title: "Dashboard Profesores",
+        },
+        {
+          segment: "formulario",
+          title: "Formulario",
         },
 
         {
@@ -120,12 +119,11 @@ const getNavigation = (): Navigation => {
           segment: "desarrollo-académico",
           title: "Desarrollo académico",
         },
-      
+
         {
           segment: "economia-negocios",
           title: "Economía y Negocios",
         },
-
       ],
     },
 

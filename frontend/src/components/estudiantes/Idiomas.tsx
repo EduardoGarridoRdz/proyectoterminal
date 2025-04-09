@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import SubirExcel from "./SubirExcel";
 import DarFormato from "./BotonFormato";
-export default function ServiciosEscolares() {
+
+export default function Idiomas() {
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -26,7 +27,7 @@ export default function ServiciosEscolares() {
   const iframeHeight = Math.min(windowSize.height * 0.9, 1080); // 90% del alto o máximo 1000px
   return (
     <Box>
-      <Grid container spacing={2} sx={{ pl: 2, pt: 2 }}>
+      <Grid container spacing={2} sx={{ pl: 2 }}>
         <Grid
           container
           columnSpacing={10}
@@ -37,8 +38,8 @@ export default function ServiciosEscolares() {
         </Grid>
         <Grid container justifyContent="center">
           <iframe
-            src="https://lookerstudio.google.com/embed/reporting/19b4d7b4-d026-4d42-bed0-b124173021e7/page/p_vocd4ud8qd"
-            title="Reporte Servicios Escolares"
+            src="https://lookerstudio.google.com/embed/reporting/19b4d7b4-d026-4d42-bed0-b124173021e7/page/p_7vsjdc9brd"
+            title="Reporte Prácticas Profesionales"
             allowFullScreen
             style={{
               flex: 1,

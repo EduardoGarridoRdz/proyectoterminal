@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import SubirExcel from "./SubirExcel";
 import DarFormato from "./BotonFormato";
+
 export default function ServiciosEscolares() {
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -22,11 +23,12 @@ export default function ServiciosEscolares() {
   }, []);
 
   // Ajustamos las dimensiones del iframe con márgenes
-  const iframeWidth = Math.min(windowSize.width * 0.92, 1920); // 95% del ancho o máximo 1800px
+  const iframeWidth = Math.min(windowSize.width * 0.92, 1920); // 92% del ancho o máximo 1800px
   const iframeHeight = Math.min(windowSize.height * 0.9, 1080); // 90% del alto o máximo 1000px
+
   return (
     <Box>
-      <Grid container spacing={2} sx={{ pl: 2, pt: 2 }}>
+      <Grid container spacing={2} sx={{ pl: 2 }}>
         <Grid
           container
           columnSpacing={10}
@@ -37,8 +39,10 @@ export default function ServiciosEscolares() {
         </Grid>
         <Grid container justifyContent="center">
           <iframe
-            src="https://lookerstudio.google.com/embed/reporting/19b4d7b4-d026-4d42-bed0-b124173021e7/page/p_vocd4ud8qd"
-            title="Reporte Servicios Escolares"
+            width={iframeWidth}
+            height={iframeHeight}
+            src="https://lookerstudio.google.com/embed/reporting/19b4d7b4-d026-4d42-bed0-b124173021e7/page/p_t1nudsw8qd"
+            title="Reporte Desarrollo Estudiantil"
             allowFullScreen
             style={{
               flex: 1,
@@ -47,7 +51,6 @@ export default function ServiciosEscolares() {
               height: `${iframeHeight}px`,
               position: "relative",
             }}
-            loading="lazy"
             sandbox="allow-storage-access-by-user-activation 
                     allow-scripts allow-same-origin 
                     allow-popups allow-downloads

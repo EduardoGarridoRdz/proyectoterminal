@@ -7,13 +7,24 @@ import { useDemoRouter } from "@toolpad/core/internal";
 import ServiciosEscolares from "../estudiantes/ServiciosEscolares";
 import DashboardProfesores from "../profesores/DashboardProfesores";
 import DashboardEstudiantes from "../estudiantes/DashboardEstudiantes";
-import Estudiantes from "../estudiantes/Estudiantes";
+import Estudiantes from "../estudiantes/DashboardEstudiantes";
+import Formulario from "../profesores/Formulario";
+import PracticasProfesionales from "../estudiantes/PracticasProfesionales";
+import DesarrolloEstudiantil from "../estudiantes/DesarrolloEstudiantil";
+import Idiomas from "../estudiantes/Idiomas";
+import logouni from "../../assets/logo.png"; // Ensure the path is correct
 
 const NAVIGATION = getNavigation();
 
 const BRANDING = {
-  logo: "",
-  title: "Departamento de planeación",
+  logo: (
+    <img
+      src={logouni}
+      alt="Universidad del Caribe"
+      style={{ height: 50, width: 40 }}
+    />
+  ),
+  title: "Secretaría de Planeación y Desarrollo Institucional",
 };
 
 const demoTheme = createTheme({
@@ -35,7 +46,6 @@ const demoTheme = createTheme({
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
     <>
-      <Typography>{pathname}</Typography>
       {pathname === "/estudiantes" && <Estudiantes />}
       {pathname === "/estudiantes/dashboard-estudiantes" && (
         <DashboardEstudiantes />
@@ -43,9 +53,18 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       {pathname === "/estudiantes/servicios-escolares" && (
         <ServiciosEscolares />
       )}
+      {pathname === "/estudiantes/practicas-profesionales" && (
+        <PracticasProfesionales />
+      )}
+      {pathname === "/estudiantes/desarrollo-estudiantil" && (
+        <DesarrolloEstudiantil />
+      )}
+      {pathname === "/estudiantes/idiomas" && <Idiomas />}
+      <Typography>{pathname}</Typography>
       {pathname === "/profesores/dashboard-profesor" && <DashboardProfesores />}
       {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
       {pathname === "/profesores/desarrollo-humano" && <p> hola</p>}
+      {pathname === "/profesores/formulario" && <Formulario />}
     </>
   );
 }

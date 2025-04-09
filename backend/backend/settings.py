@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-gi4ir!b@%-r16-=9n0v&kjsepp#fap8xjo^g&w4k%ffk%+8%gf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+]
 
 # Application definition
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'coreapi',
     'moduloetl',
     'pandas',
+    'openpyxl',
 ]
 
 MIDDLEWARE = [
@@ -55,8 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [ 
-    'http://localhost:5173',
-    'http://18.217.222.99:5173',
+    'http://localhost:5173'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -86,7 +87,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'planeacion',  # Nombre de la base de datos
+        'NAME': 'planeacionv2',  # Nombre de la base de datos
         'USER': 'postgres',  # Nombre de usuario
         'PASSWORD': 'equipo1',  # Contraseña
         'HOST': 'localhost',  # Host (usualmente 'localhost' o '127.0.0.1')

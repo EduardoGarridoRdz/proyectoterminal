@@ -79,6 +79,11 @@ class TallerSerializer(serializers.ModelSerializer):
         model = Taller
         fields = '__all__'
 
+class TipoIngresoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TipoIngreso
+        fields = '__all__'
+
 class TutoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tutoria

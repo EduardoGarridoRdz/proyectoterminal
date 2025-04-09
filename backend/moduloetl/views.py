@@ -2,7 +2,6 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .serializers import *
 from .models import *
-from .procesamiento import RecibirArchivo
 from django.views.decorators.csrf import csrf_exempt
 
 """ <----------------------- ESTUDIANTES --------------------------> """
@@ -70,9 +69,14 @@ class TutoriaViewSet(viewsets.ModelViewSet):
         queryset = Tutoria.objects.all()
         serializer_class = TutoriaSerializer
 
+class TipoIngresoViewSet(viewsets.ModelViewSet):
+      queryset = TipoIngreso.objects.all()
+      serializer_class = TipoIngresoSerializer
+
 class VinculacionAcadViewSet(viewsets.ModelViewSet):
         queryset = VinculacionAcad.objects.all()
         serializer_class = VinculacionAcadSerializer
+
 
 
 """ <----------------------- PROFESORES --------------------------> """

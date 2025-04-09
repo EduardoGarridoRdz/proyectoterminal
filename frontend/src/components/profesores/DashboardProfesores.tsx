@@ -27,9 +27,9 @@ export default function FullScreenDashboard() {
         }}
       >
         <iframe
-          src="https://lookerstudio.google.com/embed/reporting/0B_U5RNpwhcE6QXg4SXFBVGUwMjg/page/6zXD"
-          width="100%"
-          height="100%"
+          src="https://lookerstudio.google.com/embed/reporting/6a99475f-4315-4f9f-be4d-5f8b259160e4/page/QnoFF" // El enlace de tu Looker Studio
+          width="100%" 
+          height="100%" 
           frameBorder="0"
           style={{ border: 0, borderRadius: "10px" }}
           allowFullScreen
