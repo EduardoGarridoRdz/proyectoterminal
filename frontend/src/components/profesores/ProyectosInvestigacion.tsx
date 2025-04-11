@@ -2,32 +2,17 @@ import React, { useState } from "react";
 import {
   TextField,
   Button,
-  Box,
-  Typography,
+  Grid,
   Container,
   Paper,
+  Typography,
+  Autocomplete,
   MenuItem,
-  Select,
   FormControl,
   InputLabel,
-  Autocomplete,
-  Grid,
+  Select,
   SelectChangeEvent,
 } from "@mui/material";
-
-interface FormData {
-  nombreProfesor: string;
-  proyectoNombre: string;
-  tipoEstancia: string;
-  asesoria: string;
-  estancia: string;
-  tutorias: string;
-  investigacion: string;
-  capacitacion: string;
-  tipoCapacitacion: string;
-  evento: string;
-  faseProyecto: string;
-}
 
 const nombresProfesores = [
   "Dr. Mauro Felipe Berumen Calderón",
@@ -106,19 +91,25 @@ const nombresProfesores = [
   "Dr. José Felipe Reyes Miranda",
 ];
 
-const Formulario = () => {
+const tiposProyecto = ["Investigación", "Artículo", "Desarrollo tecnológico"];
+
+interface FormData {
+  nombreProfesor: string;
+  proyectoNombre: string;
+  tipoProyecto: string;
+  colaboradores: string;
+  institucionColaboradora: string;
+  resultadosImpactos: string;
+}
+
+const ProyectoInvestigacionForm = () => {
   const [formData, setFormData] = useState<FormData>({
     nombreProfesor: "",
     proyectoNombre: "",
-    tipoEstancia: "",
-    asesoria: "",
-    estancia: "",
-    tutorias: "",
-    investigacion: "",
-    capacitacion: "",
-    tipoCapacitacion: "",
-    evento: "",
-    faseProyecto: "",
+    tipoProyecto: "",
+    colaboradores: "",
+    institucionColaboradora: "",
+    resultadosImpactos: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,38 +123,30 @@ const Formulario = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/guardar/", {
+      const response = await fetch("http://127.0.0.1:8000/api/proyectos-investigacion/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      
-
 
       if (response.ok) {
-        alert("Formulario enviado correctamente");
+        alert("Proyecto enviado correctamente");
         setFormData({
           nombreProfesor: "",
           proyectoNombre: "",
-          tipoEstancia: "",
-          asesoria: "",
-          estancia: "",
-          tutorias: "",
-          investigacion: "",
-          capacitacion: "",
-          tipoCapacitacion: "",
-          evento: "",
-          faseProyecto: "",
+          tipoProyecto: "",
+          colaboradores: "",
+          institucionColaboradora: "",
+          resultadosImpactos: "",
         });
       } else {
-        alert("Hubo un error al enviar el formulario");
+        alert("Error al enviar el proyecto");
       }
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      alert("Error al enviar el formulario");
+      console.error("Error:", error);
+      alert("Error al enviar el proyecto");
     }
   };
 
@@ -171,7 +154,7 @@ const Formulario = () => {
     <Container maxWidth="md">
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h5" align="center" gutterBottom>
-          Información Personal Académica
+          Proyecto de Investigación
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} direction="column">
@@ -179,20 +162,11 @@ const Formulario = () => {
               <Autocomplete
                 options={nombresProfesores}
                 value={formData.nombreProfesor}
-                onChange={(event, newValue) =>
-                  setFormData({
-                    ...formData,
-                    nombreProfesor: newValue || "",
-                  })
+                onChange={(e, newValue) =>
+                  setFormData({ ...formData, nombreProfesor: newValue || "" })
                 }
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Nombre del Profesor"
-                    variant="outlined"
-                    fullWidth
-                    required
-                  />
+                  <TextField {...params} label="Nombre del Profesor" required fullWidth />
                 )}
               />
             </Grid>
@@ -200,135 +174,68 @@ const Formulario = () => {
             <Grid item xs={12}>
               <TextField
                 label="Nombre del Proyecto"
-                variant="outlined"
-                fullWidth
                 name="proyectoNombre"
                 value={formData.proyectoNombre}
                 onChange={handleInputChange}
+                fullWidth
                 required
               />
             </Grid>
 
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel id="tipoEstanciaLabel">Tipo de Estancia</InputLabel>
+                <InputLabel id="tipoProyectoLabel">Tipo de Proyecto</InputLabel>
                 <Select
-                  labelId="tipoEstanciaLabel"
-                  value={formData.tipoEstancia}
-                  onChange={(e) => handleSelectChange(e, "tipoEstancia")}
-                  label="Tipo de Estancia"
+                  labelId="tipoProyectoLabel"
+                  label="Tipo de Proyecto"
+                  value={formData.tipoProyecto}
+                  onChange={(e) => handleSelectChange(e, "tipoProyecto")}
                 >
-                  <MenuItem value="EstanciaAcadémica">Estancia Académica</MenuItem>
-                  <MenuItem value="EstanciaLaboral">Estancia Laboral</MenuItem>
-                  <MenuItem value="EstanciaDeInvestigación">Estancia de Investigación</MenuItem>
+                  {tiposProyecto.map((tipo) => (
+                    <MenuItem key={tipo} value={tipo}>
+                      {tipo}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                label="Asesoría"
-                variant="outlined"
-                fullWidth
-                name="asesoria"
-                value={formData.asesoria}
+                label="Colaboradores"
+                name="colaboradores"
+                value={formData.colaboradores}
                 onChange={handleInputChange}
+                fullWidth
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                label="Estancia"
-                variant="outlined"
-                fullWidth
-                name="estancia"
-                value={formData.estancia}
+                label="Institución Colaboradora"
+                name="institucionColaboradora"
+                value={formData.institucionColaboradora}
                 onChange={handleInputChange}
+                fullWidth
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                label="Tutoría"
-                variant="outlined"
-                fullWidth
-                name="tutorias"
-                value={formData.tutorias}
+                label="Resultados o Impacto"
+                name="resultadosImpactos"
+                value={formData.resultadosImpactos}
                 onChange={handleInputChange}
+                multiline
+                rows={4}
+                fullWidth
               />
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                label="Investigación"
-                variant="outlined"
-                fullWidth
-                name="investigacion"
-                value={formData.investigacion}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Capacitación"
-                variant="outlined"
-                fullWidth
-                name="capacitacion"
-                value={formData.capacitacion}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="tipoCapacitacionLabel">Tipo de Capacitación</InputLabel>
-                <Select
-                  labelId="tipoCapacitacionLabel"
-                  value={formData.tipoCapacitacion}
-                  onChange={(e) => handleSelectChange(e, "tipoCapacitacion")}
-                  label="Tipo de Capacitación"
-                >
-                  <MenuItem value="CapacitacionOnline">Capacitación Online</MenuItem>
-                  <MenuItem value="CapacitacionPresencial">Capacitación Presencial</MenuItem>
-                  <MenuItem value="CapacitacionMixta">Capacitación Mixta</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12}>
-              <TextField
-                label="Evento Académico"
-                variant="outlined"
-                fullWidth
-                name="evento"
-                value={formData.evento}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="faseProyectoLabel">Fase del Proyecto</InputLabel>
-                <Select
-                  labelId="faseProyectoLabel"
-                  value={formData.faseProyecto}
-                  onChange={(e) => handleSelectChange(e, "faseProyecto")}
-                  label="Fase del Proyecto"
-                >
-                  <MenuItem value="1">1</MenuItem>
-                  <MenuItem value="2">2</MenuItem>
-                  <MenuItem value="3">3</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Box textAlign="center" mt={2}>
-                <Button type="submit" variant="contained" color="primary">
-                  Enviar Formulario
-                </Button>
-              </Box>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Enviar Proyecto
+              </Button>
             </Grid>
           </Grid>
         </form>
@@ -337,4 +244,4 @@ const Formulario = () => {
   );
 };
 
-export default Formulario;
+export default ProyectoInvestigacionForm;

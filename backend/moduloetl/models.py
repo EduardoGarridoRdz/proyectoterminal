@@ -370,9 +370,7 @@ class Profesor(models.Model):
     id_pro_edu = models.ForeignKey(ProEdu, models.DO_NOTHING, db_column='id_pro_edu')
     jefe_departamento = models.BooleanField()
     id_tipo_profesor = models.ForeignKey('TipoProfesor', models.DO_NOTHING, db_column='id_tipo_profesor')
-    id_estudio = models.ForeignKey(Estudios, models.DO_NOTHING, db_column='id_estudio')
     activo = models.BooleanField()
-    id_actividad = models.ForeignKey(Actividadesinactivo, models.DO_NOTHING, db_column='id_actividad')
 
     class Meta:
         managed = True

@@ -20,7 +20,7 @@ const BigButton = styled(Button)({
   fontSize: "5 rem",
   borderRadius: "5px",
   padding: "12px 15px",
-  backgroundColor: "#287233",
+  backgroundColor: "#dd6d10",
 });
 
 const DarFormato: React.FC = () => {
@@ -78,7 +78,7 @@ const DarFormato: React.FC = () => {
       Dar formato
       <VisuallyHiddenInput
         type="file"
-        accept=".xlsx"
+        accept=".xlsx,.csv"
         onChange={handleFileChange}
       />
     </BigButton>

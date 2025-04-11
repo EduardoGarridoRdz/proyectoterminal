@@ -11,8 +11,15 @@ import Estudiantes from "../estudiantes/DashboardEstudiantes";
 import Formulario from "../profesores/Formulario";
 import PracticasProfesionales from "../estudiantes/PracticasProfesionales";
 import DesarrolloEstudiantil from "../estudiantes/DesarrolloEstudiantil";
+import ServicioSocial from "../estudiantes/ServicioSocial";
+import AñadirUsuario from "./AñadirUsuario";
 import Idiomas from "../estudiantes/Idiomas";
 import logouni from "../../assets/logo.png"; // Ensure the path is correct
+import Direccion from "../profesores/Direccion";
+import Formacion from "../profesores/FormacionPersonal";
+import Proyecto from "../profesores/ProyectosInvestigacion";
+import Anual from "../profesores/ActividadesAnual";
+import Vinculacion from "../profesores/ActividadVinculacion";
 
 const NAVIGATION = getNavigation();
 
@@ -46,7 +53,9 @@ const demoTheme = createTheme({
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (
     <>
-      {pathname === "/estudiantes" && <Estudiantes />}
+      {pathname === "/estudiantes" && (
+        <Estudiantes />)
+      }
       {pathname === "/estudiantes/dashboard-estudiantes" && (
         <DashboardEstudiantes />
       )}
@@ -59,12 +68,29 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       {pathname === "/estudiantes/desarrollo-estudiantil" && (
         <DesarrolloEstudiantil />
       )}
-      {pathname === "/estudiantes/idiomas" && <Idiomas />}
-      <Typography>{pathname}</Typography>
+      {pathname === "/estudiantes/idiomas" && (
+        <Idiomas />)
+      }
+      {pathname === "/estudiantes/servicio-social" && (
+        <ServicioSocial />
+      )}
+      {pathname === "/administrar-usuarios/anadir-usuario" && <AñadirUsuario />}
+
       {pathname === "/profesores/dashboard-profesor" && <DashboardProfesores />}
       {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
-      {pathname === "/profesores/desarrollo-humano" && <p> hola</p>}
+
+
+      {pathname === "/profesores/desarrollo-humano" && < Anual />}
+
+
       {pathname === "/profesores/formulario" && <Formulario />}
+
+      {pathname === "/profesores/ciencias-basicas" && <Direccion />}
+      {pathname === "/profesores/turismo-sustentable" && <Formacion />}
+      {pathname === "/profesores/servicios-escolares" && <Vinculacion />}
+      {pathname === "/profesores/departamento-investigacion" && <Proyecto />}
+
+      <Typography>{pathname}</Typography>
     </>
   );
 }

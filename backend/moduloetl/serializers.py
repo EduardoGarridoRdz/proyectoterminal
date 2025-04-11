@@ -1,5 +1,10 @@
 # miapp/serializers.py
 from rest_framework import serializers
+from datetime import date  ## nuev
+ 
+from .models import Profesor, GradoAcademico, ProEdu, TipoProfesor
+
+
 from .models import * 
 
 """ <----------------------- ESTUDIANTES --------------------------> """
@@ -93,6 +98,9 @@ class VinculacionAcadSerializer(serializers.ModelSerializer):
     class Meta:
         model = VinculacionAcad
         fields = '__all__'
+
+
+
 
 """ <----------------------- PROFESORES --------------------------> """
 
@@ -230,3 +238,5 @@ class ActividadesinactivoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actividadesinactivo
         fields = '__all__'
+
+    

@@ -187,3 +187,4 @@ class GradoAsesoriaViewSet(viewsets.ModelViewSet):
 class ActividadesinactivoViewSet(viewsets.ModelViewSet):
     queryset = Actividadesinactivo.objects.all()
     serializer_class = ActividadesinactivoSerializer
+

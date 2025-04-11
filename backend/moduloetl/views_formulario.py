@@ -1,105 +1,118 @@
+from django.db.models import Value, CharField
+from django.db.models.functions import Concat
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import (
-    Proyecto, TipoEstancia, Capacitacion, EventoAcad, FaseProyecto,
-    TipoCapacitacion, TipoEvento, EventoSubcategoria, Profesor, Usuario,
-    Contrasena, Departamento, Tipousuarios, GradoAcademico, ProEdu,
-    TipoProfesor, Estudios, Actividadesinactivo
+    Profesor, Proyecto, ProfesorProyecto, Investigacion, TipoProyecto, Estudios,
+    Capacitacion, FaseProyecto, TipoCapacitacion, EventoAcad
 )
-from datetime import date
+import re
+from datetime import datetime
 
 @api_view(['POST'])
-def guardar_formulario(request):
+def guardar_formulario_unificado(request):
     data = request.data
-    print("Datos recibidos:", data)
-    try:
-        from django.db import connection, transaction
-        
-        with transaction.atomic():
-            # Variables necesarias
-            usuario = Usuario.objects.first()
-            grado, _ = GradoAcademico.objects.get_or_create(grado_academico="Licenciatura")
-            proedu, _ = ProEdu.objects.get_or_create(nombre_pro_edu="UPQ")
-            tipo_profesor, _ = TipoProfesor.objects.get_or_create(tipo_profesor=1)
-            hoy = date.today()
-            
-            # 1. Insertar directamente en la tabla estudios y actividadesinactivo con id_profesor nulo
-            with connection.cursor() as cursor:
-                # Para PostgreSQL, deshabilitar restricciones temporalmente
-                cursor.execute("SET CONSTRAINTS ALL DEFERRED;")
-                
-                # Insertar un estudio sin id_profesor
-                cursor.execute(
-                    """
-                    INSERT INTO estudios (grado_actual, grado_estudiando, fecha_inicio, fecha_final, nombre_institucion, id_profesor)
-                    VALUES (%s, %s, %s, %s, %s, NULL) RETURNING id_estudios
-                    """, 
-                    ["Licenciatura", "Maestría", hoy, hoy, "UPQ"]
-                )
-                estudio_id = cursor.fetchone()[0]
-                
-                # Insertar actividad sin id_profesor
-                cursor.execute(
-                    """
-                    INSERT INTO "actividadesInactivo" (cartaautorizacion, institucion, cartaaceptacioninst, nombproyecto, fechainicio, fechafinal, cartareincorporacion, id_profesor)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, NULL) RETURNING id_actividad
-                    """, 
-                    [bytes(), "UPQ", bytes(), "Proyecto Prueba", hoy, hoy, bytes()]
-                )
-                actividad_id = cursor.fetchone()[0]
-                
-                # Crear profesor con las referencias a estudio y actividad
-                cursor.execute(
-                    """
-                    INSERT INTO profesor (nombre, apellido_pat, apellido_mat, correo, id_usuario_id, id_grado_academico_id, id_pro_edu_id, jefe_departamento, id_tipo_profesor_id, id_estudio_id, activo, id_actividad_id)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id_profesor
-                    """, 
-                    [data.get("nombreProfesor"), "-", "-", "correo@prueba.com", usuario.id, grado.id, proedu.id, False, tipo_profesor.id, estudio_id, True, actividad_id]
-                )
-                profesor_id = cursor.fetchone()[0]
-                
-                # Actualizar estudio y actividad con el id del profesor
-                cursor.execute("UPDATE estudios SET id_profesor = %s WHERE id_estudios = %s", [profesor_id, estudio_id])
-                cursor.execute("UPDATE \"actividadesInactivo\" SET id_profesor = %s WHERE id_actividad = %s", [profesor_id, actividad_id])
-                
-                # Confirmar las transacciones
-                cursor.execute("SET CONSTRAINTS ALL IMMEDIATE;")
-            
-            # Obtener los objetos para usarlos en el resto del código
-            profesor = Profesor.objects.get(id_profesor=profesor_id)
-            
-            # El resto del código como estaba...
-            Proyecto.objects.create(
-                nombre_proyecto=data.get("proyectoNombre"),
-                tipo_proyecto_id=1,
-                objetivo="Objetivo no especificado",
-                etapa=data.get("faseProyecto"),
-                financiamiento="Sin financiamiento"
+    nombre_profesor = data.get("nombreProfesor")
+
+    if not nombre_profesor:
+        return Response({"error": "Campo 'nombreProfesor' requerido"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Limpiar prefijos como Dr., Mtro., etc.
+    nombre_profesor = re.sub(r'^(Dr\.|Dra\.|Mtro\.|Mtra\.)\s+', '', nombre_profesor).strip()
+
+    # Buscar al profesor por nombre completo
+    profesor = Profesor.objects.annotate(
+        nombre_completo=Concat('nombre', Value(' '), 'apellido_pat', Value(' '), 'apellido_mat', output_field=CharField())
+    ).filter(nombre_completo__icontains=nombre_profesor).first()
+
+    if not profesor:
+        return Response({"error": "Profesor no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+    # 1. Formación Personal Académica
+    if "formacionAcademica" in data:
+        formacion = data["formacionAcademica"]
+        Estudios.objects.create(
+            id_profesor=profesor,
+            grado_actual=formacion["gradoActual"],
+            grado_estudiando=formacion["gradoEstudiando"],
+            fecha_inicio=formacion["fechaInicio"],
+            fecha_final=formacion["fechaFinal"],
+            nombre_institucion=formacion["nombreInstitucion"]
+        )
+        if "fase" in formacion:
+            FaseProyecto.objects.get_or_create(fase=formacion["fase"])
+
+    # 2. Proyecto de Investigación
+    if "proyectoInvestigacion" in data:
+        proj = data["proyectoInvestigacion"]
+        tipo = TipoProyecto.objects.filter(tipo__iexact=proj["tipoProyecto"]).first()
+        if tipo:
+            proyecto = Proyecto.objects.create(
+                nombre_proyecto=proj["proyectoNombre"],
+                tipo_proyecto=tipo,
+                objetivo=proj["resultadosImpactos"],
+                etapa="",
+                financiamiento=""
             )
-            
-            TipoEstancia.objects.get_or_create(tipo_estancia=data.get("tipoEstancia"))
-            
+            ProfesorProyecto.objects.create(
+                id_profesor=profesor,
+                id_proyecto=proyecto,
+                fecha_inicio=datetime.now().date(),
+                fecha_final=datetime.now().date()
+            )
+
+    # 3. Actividad de Vinculación
+    if "actividadVinculacion" in data:
+        vinc = data["actividadVinculacion"]
+        Investigacion.objects.create(
+            tipo_producto_id=1,
+            isbn="",
+            objeto_estudio=vinc["descripcionActividad"],
+            fecha_publicacion=vinc["fechaVinculacion"],
+            numero_edicion="",
+            lugar_publicacion=vinc["institucionVinculada"],
+            nombre_institucion=vinc["resultadoVinculacion"]
+        )
+
+    # 4. Dirección de Proyectos Terminales
+    if "proyectoTerminal" in data:
+        pt = data["proyectoTerminal"]
+        EventoAcad.objects.create(
+            id_profesor=profesor,
+            id_tipo_evento_id=1,
+            id_evento_subcategoria_id=1,
+            nombre_evento=pt["nombrePT"],
+            fecha_inicio=pt["fechaPT"],
+            fecha_final=pt["fechaPT"]
+        )
+
+    # 5. Actividades Anuales Académicas
+    if "actividadAnual" in data:
+        act = data["actividadAnual"]
+        Investigacion.objects.create(
+            tipo_producto_id=2,
+            isbn=act["linkProducto"],
+            objeto_estudio=act["productosAcademicos"],
+            fecha_publicacion=f"{act['anioPublicacion']}-01-01",
+            numero_edicion="",
+            lugar_publicacion=act["sedeActividad"],
+            nombre_institucion=""
+        )
+
+    # 6. Capacitación
+    if "capacitacion" in data:
+        cap = data["capacitacion"]
+        tipo_cap = TipoCapacitacion.objects.filter(tipo__iexact=cap["tipo"]).first()
+        if tipo_cap:
             Capacitacion.objects.create(
-                evento=data.get("capacitacion"),
-                sede="Por definir",
-                organizador="Por definir",
                 id_profesor=profesor,
-                id_tipo_capacitacion=TipoCapacitacion.objects.get_or_create(tipo=data.get("tipoCapacitacion"))[0],
-                fecha_inicio=hoy,
-                fecha_final=hoy
+                id_tipo_capacitacion=tipo_cap,
+                evento=cap["evento"],
+                sede="",
+                organizador="",
+                fecha_inicio=datetime.now().date(),
+                fecha_final=datetime.now().date()
             )
-            
-            EventoAcad.objects.create(
-                nombre_evento=data.get("evento"),
-                id_profesor=profesor,
-                id_tipo_evento=TipoEvento.objects.get_or_create(tipo_evento="Otro")[0],
-                id_evento_subcategoria=EventoSubcategoria.objects.get_or_create(subcategoria="General")[0],
-                fecha_inicio=hoy,
-                fecha_final=hoy
-            )
-            
-        return Response({"mensaje": "Formulario recibido y datos guardados"}, status=status.HTTP_201_CREATED)
-    except Exception as e:
-        print("Error:", e)
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"mensaje": "Formulario completo guardado exitosamente"}, status=status.HTTP_201_CREATED)

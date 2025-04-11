@@ -12,7 +12,7 @@ Contraseña: equipo1
 Puerto: 5432
 IP: 3.142.40.189
 sudo -i -u postgres
-psql -d planeacionv2
+ psql -d planeacionv2
 
 <----- Github ---------->
 git add.

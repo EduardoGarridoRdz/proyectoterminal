@@ -4,11 +4,12 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework import routers
 from .views import *
 from .procesamiento import RecibirArchivo
-from .views_formulario import guardar_formulario
 from .formato_archivo import FormatoArchivo
+from .models import Usuario
+from .views_formulario import guardar_formulario_unificado
+
 
 router = routers.DefaultRouter()
-
 
 """ <----------------------- ESTUDIANTES --------------------------> """
 router.register(r'ciudad', CiudadViewSet)
@@ -59,12 +60,15 @@ router.register(r'estudios', EstudiosViewSet)
 router.register(r'grado_asesoria', GradoAsesoriaViewSet)
 router.register(r'actividades_inactivo', ActividadesinactivoViewSet)
 
-
 urlpatterns = [
+        path("guardar/", guardar_formulario_unificado),   
+
     path('', include(router.urls)), 
     path('docs/', include_docs_urls(title="API DOCS")),
     path('ProcesarExcel/', RecibirArchivo),
-    path('guardar_formulario/', guardar_formulario, name='guardar-formulario'),
-
     path('FormatoArchivo/', FormatoArchivo),
+    
+ 
+
  ]
+

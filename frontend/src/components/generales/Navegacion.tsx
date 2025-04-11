@@ -102,12 +102,7 @@ const getNavigation = (): Navigation => {
 
         {
           segment: "turismo-sustentable",
-          title: "Turismo sustentable y gestión",
-        },
-
-        {
-          segment: "servicicios-escolares",
-          title: "Servicios escolares",
+          title: "Turismo Sustentable, Gastronomía y Hotelería",
         },
 
         {
@@ -123,6 +118,15 @@ const getNavigation = (): Navigation => {
         {
           segment: "economia-negocios",
           title: "Economía y Negocios",
+        },
+        {
+          segment: "recursos-humanos",
+          title: "Recursos Humanos",
+        },
+
+        {
+          segment: "departamento-investigacion",
+          title: "Departamento de Investigacion",
         },
       ],
     },
@@ -141,7 +145,7 @@ const getNavigation = (): Navigation => {
       icon: <GroupIcon />,
       children: [
         {
-          segment: "añadir-usuario",
+          segment: "anadir-usuario",
           title: "Añadir Usuario",
         },
         {

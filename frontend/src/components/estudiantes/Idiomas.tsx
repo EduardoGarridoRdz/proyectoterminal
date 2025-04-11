@@ -27,7 +27,7 @@ export default function Idiomas() {
   const iframeHeight = Math.min(windowSize.height * 0.9, 1080); // 90% del alto o máximo 1000px
   return (
     <Box>
-      <Grid container spacing={2} sx={{ pl: 2 }}>
+      <Grid container spacing={2} sx={{ pl: 2, pt: 2 }}>
         <Grid
           container
           columnSpacing={10}

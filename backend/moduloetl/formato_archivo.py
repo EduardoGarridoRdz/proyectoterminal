@@ -12,7 +12,6 @@ def FormatoArchivo(request):
       Archivo = request.FILES['archivo']
          
       if Archivo.content_type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-         Archivo = request.FILES['archivo']
 
          # Abrir el archivo Excel
          wb = load_workbook(Archivo)
@@ -57,7 +56,8 @@ def FormatoArchivo(request):
             buffer.read(),
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
          )
-
+         buffer.close()
+         wb.close()
          return response
          
       else:
@@ -66,6 +66,7 @@ def FormatoArchivo(request):
             content_type='application/json',
             status=400
          )
+      
    except Exception as e:
      print("Error al procesar el archivo:", str(e))
      return HttpResponse(

@@ -28,7 +28,7 @@ export default function ServiciosEscolares() {
 
   return (
     <Box>
-      <Grid container spacing={2} sx={{ pl: 2 }}>
+      <Grid container spacing={2} sx={{ pl: 2, pt: 2 }}>
         <Grid
           container
           columnSpacing={10}
