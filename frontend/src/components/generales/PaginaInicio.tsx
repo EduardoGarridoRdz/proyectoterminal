@@ -6,20 +6,21 @@ import getNavigation from "./Navegacion";
 import { useDemoRouter } from "@toolpad/core/internal";
 import ServiciosEscolares from "../estudiantes/ServiciosEscolares";
 import DashboardProfesores from "../profesores/DashboardProfesores";
-import DashboardEstudiantes from "../estudiantes/DashboardEstudiantes";
-import Estudiantes from "../estudiantes/DashboardEstudiantes";
-import Formulario from "../profesores/Formulario";
+import Formulario from "../profesores/Formulario.tsx";
 import PracticasProfesionales from "../estudiantes/PracticasProfesionales";
 import DesarrolloEstudiantil from "../estudiantes/DesarrolloEstudiantil";
 import ServicioSocial from "../estudiantes/ServicioSocial";
 import AñadirUsuario from "./AñadirUsuario";
 import Idiomas from "../estudiantes/Idiomas";
-import logouni from "../../assets/logo.png"; // Ensure the path is correct
+import logouni from "../../assets/logo.png";
+import Producto from "../profesores/Producto_inv.tsx";
 import Direccion from "../profesores/Direccion";
 import Formacion from "../profesores/FormacionPersonal";
 import Proyecto from "../profesores/ProyectosInvestigacion";
-import Anual from "../profesores/ActividadesAnual";
+import Personal from "../profesores/FormacionIntegral.tsx";
 import Vinculacion from "../profesores/ActividadVinculacion";
+import React, { useState, useEffect } from "react";
+import { Tabs, Tab, Box } from "@mui/material";
 
 const NAVIGATION = getNavigation();
 
@@ -51,14 +52,26 @@ const demoTheme = createTheme({
 });
 
 function DemoPageContent({ pathname }: { pathname: string }) {
+  const [tabIndex, setTabIndex] = useState(0);
+  
+  useEffect(() => {
+    setTabIndex(0);
+  }, [pathname]);
+  
+  const getDepartamentoFromPath = () => {
+    if (pathname.startsWith("/profesores/")) {
+      const parts = pathname.split("/");
+      if (parts.length >= 3) {
+        return parts[2];
+      }
+    }
+    return "/inicio";
+  };
+  const currentDepartamento = getDepartamentoFromPath();
+
   return (
     <>
-      {pathname === "/estudiantes" && (
-        <Estudiantes />)
-      }
-      {pathname === "/estudiantes/dashboard-estudiantes" && (
-        <DashboardEstudiantes />
-      )}
+
       {pathname === "/estudiantes/servicios-escolares" && (
         <ServiciosEscolares />
       )}
@@ -76,21 +89,106 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       )}
       {pathname === "/administrar-usuarios/anadir-usuario" && <AñadirUsuario />}
 
+
       {pathname === "/profesores/dashboard-profesor" && <DashboardProfesores />}
-      {pathname === "/otra-ruta" && <Typography>Esta es otra ruta</Typography>}
-
-
-      {pathname === "/profesores/desarrollo-humano" && < Anual />}
-
-
       {pathname === "/profesores/formulario" && <Formulario />}
 
-      {pathname === "/profesores/ciencias-basicas" && <Direccion />}
-      {pathname === "/profesores/turismo-sustentable" && <Formacion />}
-      {pathname === "/profesores/servicios-escolares" && <Vinculacion />}
-      {pathname === "/profesores/departamento-investigacion" && <Proyecto />}
 
-      <Typography>{pathname}</Typography>
+
+      {pathname === "/profesores/ciencias-basicas" && (
+        <Box sx={{ width: "100%" }} key={pathname}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => setTabIndex(newValue)}
+            centered
+          >
+            <Tab label="Formación Integral" />
+            <Tab label="Actividad de Vinculación" />
+            <Tab label="Dirección de Tesis" />
+          </Tabs>
+          <Box sx={{ mt: 2 }}>
+            {tabIndex === 0 && <Personal departamento={currentDepartamento}/>}
+            {tabIndex === 1 && <Vinculacion departamento={currentDepartamento}/>}
+            {tabIndex === 2 && <Direccion departamento={currentDepartamento}/>}
+          </Box>
+        </Box>
+      )}
+
+      {pathname === "/profesores/economia-negocios" && (
+        <Box sx={{ width: "100%" }} key={pathname}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => setTabIndex(newValue)}
+            centered
+          >
+            <Tab label="Formación Integral" />
+            <Tab label="Actividad de Vinculación" />
+            <Tab label="Dirección de Tesis" />
+          </Tabs>
+          <Box sx={{ mt: 2 }}>
+            {tabIndex === 0 && <Personal departamento={currentDepartamento}/>}
+            {tabIndex === 1 && <Vinculacion departamento={currentDepartamento}/>}
+            {tabIndex === 2 && <Direccion departamento={currentDepartamento}/>}
+          </Box>
+        </Box>
+      )}
+
+      {pathname === "/profesores/turismo-sustentable" && (
+        <Box sx={{ width: "100%" }} key={pathname}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => setTabIndex(newValue)}
+            centered
+          >
+            <Tab label="Formación Integral" departamento={currentDepartamento}/>
+            <Tab label="Actividad de Vinculación" departamento={currentDepartamento}/>
+            <Tab label="Dirección de Tesis" departamento={currentDepartamento}/>
+          </Tabs>
+          <Box sx={{ mt: 2 }}>
+            {tabIndex === 0 && <Personal departamento={currentDepartamento}/>}
+            {tabIndex === 1 && <Vinculacion departamento={currentDepartamento}/>}
+            {tabIndex === 2 && <Direccion departamento={currentDepartamento}/>}
+          </Box>
+        </Box>
+      )}
+
+      {pathname === "/profesores/desarrollo-humano" && (
+        <Box sx={{ width: "100%" }} key={pathname}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => setTabIndex(newValue)}
+            centered
+          >
+            <Tab label="Formación Integral" />
+            <Tab label="Actividad de Vinculación" />
+            <Tab label="Dirección de Tesis" />
+          </Tabs>
+          <Box sx={{ mt: 2 }}>
+            {tabIndex === 0 && <Personal departamento={currentDepartamento}/>}
+            {tabIndex === 1 && <Vinculacion departamento={currentDepartamento}/>}
+            {tabIndex === 2 && <Direccion departamento={currentDepartamento}/>}
+          </Box>
+        </Box>
+      )} 
+  
+      {pathname === "/profesores/desarrollo-academico" && <Formacion />}
+
+      {pathname === "/profesores/departamento-investigacion" && (
+        <Box sx={{ width: "100%" }} key={pathname}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_event: React.SyntheticEvent, newValue: number) => setTabIndex(newValue)}
+            centered
+          >
+            <Tab label="Proyecto de Investigación" />
+            <Tab label="Producto de Investigación" />
+          </Tabs>
+          <Box sx={{ mt: 2 }}>
+            {tabIndex === 0 && <Proyecto departamento={currentDepartamento} />}
+            {tabIndex === 1 && <Producto departamento={currentDepartamento} />}
+          </Box>
+        </Box>
+      )} 
     </>
   );
 }
@@ -101,14 +199,10 @@ interface DemoProps {
 
 export default function PaginaInicio(props: DemoProps) {
   const { window } = props;
-
   const router = useDemoRouter();
-
-  // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
 
   return (
-    // preview-start
     <AppProvider
       navigation={NAVIGATION}
       router={router}
@@ -120,6 +214,5 @@ export default function PaginaInicio(props: DemoProps) {
         <DemoPageContent pathname={router.pathname} />
       </DashboardLayout>
     </AppProvider>
-    // preview-end
   );
 }

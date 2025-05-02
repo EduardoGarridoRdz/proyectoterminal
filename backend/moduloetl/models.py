@@ -109,9 +109,23 @@ class Departamento(models.Model):
     id_departamento = models.AutoField(primary_key=True)
     nombre_departamento = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.nombre_departamento
+
     class Meta:
         managed = False
         db_table = 'departamento'
+
+class ProgramaEducativo(models.Model):
+    id_programa_educativo = models.AutoField(primary_key=True)
+    nombre_programa_educativo = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nombre_programa_educativo
+    
+    class Meta:
+        managed = False
+        db_table = 'programa_educativo'
 
 
 class Egresado(models.Model):
@@ -197,20 +211,6 @@ class Estudiante(models.Model):
         db_table = 'estudiante'
 
 
-class Estudios(models.Model):
-    id_estudios = models.AutoField(primary_key=True)
-    id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
-    grado_actual = models.CharField(max_length=255)
-    grado_estudiando = models.CharField(max_length=255)
-    fecha_inicio = models.DateField()
-    fecha_final = models.DateField()
-    nombre_institucion = models.CharField(max_length=255)
-
-    class Meta:
-        managed = False
-        db_table = 'estudios'
-
-
 class EventoAcad(models.Model):
     id_evento_acad = models.AutoField(primary_key=True)
     id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
@@ -254,6 +254,9 @@ class FaseProyecto(models.Model):
     id_fase_proyecto = models.AutoField(primary_key=True)
     fase = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.fase
+    
     class Meta:
         managed = False
         db_table = 'fase_proyecto'
@@ -263,6 +266,9 @@ class GradoAcademico(models.Model):
     id_grado_academico = models.AutoField(primary_key=True)
     grado_academico = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.grado_academico
+    
     class Meta:
         managed = False
         db_table = 'grado_academico'
@@ -358,25 +364,54 @@ class ProEdu(models.Model):
         managed = True
         db_table = 'pro_edu'
 
-
 class Profesor(models.Model):
     id_profesor = models.AutoField(primary_key=True)
-    id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='id_usuario')
-    nombre = models.CharField(max_length=30)
-    apellido_pat = models.CharField(max_length=30)
-    apellido_mat = models.CharField(max_length=30)
-    correo = models.CharField(max_length=50)
-    id_grado_academico = models.ForeignKey(GradoAcademico, models.DO_NOTHING, db_column='id_grado_academico')
-    id_pro_edu = models.ForeignKey(ProEdu, models.DO_NOTHING, db_column='id_pro_edu')
+    nombre_profesor = models.CharField(max_length=30)
+    apellido_pat_profesor = models.CharField(max_length=30)
+    apellido_mat_profesor = models.CharField(max_length=30)
+    correo_profesor = models.CharField(max_length=50)
+    id_grado_academico = models.ForeignKey('GradoAcademico',models.DO_NOTHING,db_column='id_grado_academico')
+    id_programa_educativo = models.ForeignKey('ProgramaEducativo', models.DO_NOTHING, db_column='id_programa_educativo')
+    id_departamento = models.ForeignKey('Departamento', models.DO_NOTHING, db_column='id_departamento')
     jefe_departamento = models.BooleanField()
-    id_tipo_profesor = models.ForeignKey('TipoProfesor', models.DO_NOTHING, db_column='id_tipo_profesor')
+    id_tipo_profesor = models.CharField(max_length=25)
     activo = models.BooleanField()
+    sexo = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.nombre_profesor
 
     class Meta:
         managed = True
         db_table = 'profesor'
 
+class InformacionAdicional(models.Model):
+    id_informacion_adicional = models.AutoField(primary_key=True)
+    id_profesor = models.ForeignKey('Profesor', models.CASCADE, db_column='id_profesor', related_name='informacion_adicional')
+    perfil_prodep = models.BooleanField(default=False)
+    vigencia_prodep = models.CharField(max_length=50, blank=True, null=True)
+    miembro_snii_seii = models.BooleanField(default=False)
+    nivel_snii_seii = models.CharField(max_length=10, blank=True, null=True)
+    anio_ingreso_snii_seii = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        managed = False
+        db_table = 'informacion_adicional'
+
+class Estudios(models.Model):
+    id_estudios = models.AutoField(primary_key=True)
+    id_profesor = models.ForeignKey('Profesor', models.CASCADE, db_column='id_profesor', related_name='estudios')
+    grado_actual = models.CharField(max_length=255)
+    grado_estudiando = models.CharField(max_length=255)
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
+    nombre_institucion = models.CharField(max_length=255)
+    nombre_institucion_est = models.CharField(max_length=255)
+    fecha_inicio_est = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'estudios'
 
 class ProfesorEstancia(models.Model):
     id_estancia = models.OneToOneField(Estancia, models.DO_NOTHING, db_column='id_estancia', primary_key=True)
@@ -515,6 +550,9 @@ class TipoProducto(models.Model):
     id_tipo_producto = models.AutoField(primary_key=True)
     tipo_producto = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.tipo_producto
+
     class Meta:
         managed = False
         db_table = 'tipo_producto'
@@ -522,7 +560,10 @@ class TipoProducto(models.Model):
 
 class TipoProfesor(models.Model):
     id_tipo_profesor = models.AutoField(primary_key=True)
-    tipo_profesor = models.IntegerField()
+    tipo_profesor = models.CharField(max_length=25)
+
+    def __str__(self):
+        return str(self.tipo_profesor)
 
     class Meta:
         managed = False
@@ -566,14 +607,16 @@ class Tutoria(models.Model):
 
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30)
-    apellido_pat = models.CharField(max_length=30)
-    apellido_mat = models.CharField(max_length=30)
-    correo = models.CharField(max_length=40)
+    nombre_usuario = models.CharField(max_length=30)
+    apellido_pat_usuario = models.CharField(max_length=30)
+    apellido_mat_usuario = models.CharField(max_length=30)
+    correo_usuario = models.CharField(max_length=40)
     id_contrasena = models.ForeignKey(Contrasena, models.DO_NOTHING, db_column='id_contrasena')
     id_tipo_usuario = models.ForeignKey(Tipousuarios, models.DO_NOTHING, db_column='id_tipo_usuario')
     id_departamento = models.ForeignKey(Departamento, models.DO_NOTHING, db_column='id_departamento')
-
+    
+    def __str__(self):
+        return self.nombre_usuario
     class Meta:
         managed = True
         db_table = 'usuario'
@@ -595,3 +638,128 @@ class VinculacionAcad(models.Model):
     class Meta:
         managed = True
         db_table = 'vinculacion_acad'
+
+
+class PerfilAcademico(models.Model):
+    id_profesor = models.OneToOneField('Profesor', on_delete=models.CASCADE, db_column='id_profesor')
+
+    perfil_prodep = models.BooleanField(default=False)
+    vigencia_prodep = models.CharField(max_length=50, blank=True, null=True)
+
+    miembro_snii = models.BooleanField(default=False)
+    nivel_snii = models.CharField(max_length=10, blank=True, null=True)
+    año_ingreso_snii = models.IntegerField(blank=True, null=True)
+
+    miembro_seii = models.BooleanField(default=False)
+    nivel_seii = models.CharField(max_length=10, blank=True, null=True)
+    año_ingreso_seii = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'perfil_academico'
+
+    def __str__(self):
+        return f"Perfil Académico de {self.id_profesor}"
+
+class Sexo(models.Model):
+    id_sexo = models.AutoField(primary_key=True)
+    nombre_sexo = models.CharField(max_length=20, unique=True)
+    
+    def __str__(self):
+        return self.nombre_sexo
+
+    class Meta:
+        managed = False
+        db_table = 'sexo'
+
+class FormacionIntegralEvento(models.Model):
+    id_formacion_integral_evento = models.AutoField(primary_key=True)
+    fecha_evento = models.DateField()
+    fecha_final = models.DateField()
+    nombre_evento = models.CharField(max_length=255)
+    sede = models.CharField(max_length=255)
+    objetivo = models.CharField(max_length=255)
+    num_estudiantes = models.IntegerField()
+    num_profesores = models.IntegerField()
+    departamento_academico = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'formacion_integral_evento'
+
+class ActividadVinculacion(models.Model):
+    id_actividad_vinculacion = models.AutoField(primary_key=True)
+    institucion_vinculada = models.CharField(max_length=255)
+    objetivo_actividad = models.CharField(max_length=255)
+    descripcion_actividad = models.CharField(max_length=255)
+    fecha_vinculacion = models.DateField()
+    fecha_final = models.DateField()
+    resultado_vinculacion = models.CharField(max_length=255)
+    id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
+    departamento_academico = models.CharField(max_length=255)
+    
+
+    class Meta:
+        managed = False
+        db_table = 'actividad_vinculacion'
+
+class ProyectoTesis(models.Model):
+    id_proyecto_tesis = models.AutoField(primary_key=True)
+    nombre_proyecto = models.CharField(max_length=255)
+    estudiantes_participantes = models.CharField(max_length=255)
+    id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
+    id_fase_proyecto = models.ForeignKey('FaseProyecto', models.DO_NOTHING, db_column='id_fase_proyecto')
+    departamento_academico = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'proyecto_tesis'
+
+class FormularioCapacitacion(models.Model):
+    id_formulario_capacitacion = models.AutoField(primary_key=True)
+    id_profesor = models.ForeignKey('Profesor', models.DO_NOTHING, db_column='id_profesor')
+    evento = models.CharField(max_length=255)
+    fecha_inicio = models.DateField()
+    fecha_final = models.DateField()
+    sede = models.CharField(max_length=255)
+    organizador = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'formulario_capacitacion'
+
+class ProyectoInvestigacion(models.Model):
+    id_proyecto_investigacion = models.AutoField(primary_key=True)
+    participantes = models.ForeignKey('Profesor', on_delete=models.DO_NOTHING, db_column='participantes')
+    nombre_proyecto = models.CharField(max_length=255)
+    objetivo = models.CharField(max_length=255)
+    institucion_colaboradora = models.CharField(max_length=255)
+    resultados_impactos = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'proyecto_investigacion'
+
+class ProductoInvestigacion(models.Model):
+    id_producto_investigacion = models.AutoField(primary_key=True)
+    id_profesor = models.ForeignKey('Profesor', on_delete=models.DO_NOTHING, db_column='id_profesor')
+    id_tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.DO_NOTHING, db_column='id_tipo_producto')
+    anio_periodo = models.CharField(max_length=255)
+    nombre_producto = models.CharField(max_length=255)
+    editorial = models.CharField(max_length=255)
+    isbn = models.CharField(max_length=255)
+    objeto_estudio = models.CharField(max_length=255)
+    fecha_publicacion = models.DateField()
+    numero_edicion = models.CharField(max_length=255)
+    lugar_publicacion = models.CharField(max_length=255)
+    institucion_colaboradora = models.CharField(max_length=255)
+    hipervinculo_contrato = models.CharField(max_length=255)
+    recurso_publico = models.CharField(max_length=255)
+    recurso_privado = models.CharField(max_length=255)
+    url_publicacion = models.CharField(max_length=255)
+    justificacion_sin_isbn = models.CharField(max_length=255)
+    nombre_revista = models.CharField(max_length=255)
+    numero_revista = models.CharField(max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'producto_investigacion'

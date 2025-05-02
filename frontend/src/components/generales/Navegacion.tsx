@@ -47,6 +47,8 @@ const getNavigation = (): Navigation => {
           segment: "dashboard-estudiantes",
           title: "Dashboard Estudiantes",
         },
+
+
         {
           segment: "servicios-escolares",
           title: "Servicios Escolares",
@@ -85,49 +87,59 @@ const getNavigation = (): Navigation => {
           segment: "dashboard-profesor",
           title: "Dashboard Profesores",
         },
-        {
-          segment: "formulario",
-          title: "Formulario",
-        },
+
+
 
         {
-          segment: "desarrollo-humano",
-          title: "Desarrollo Humano",
+          segment: "formulario",
+          title: "Recursos Humanos",
         },
+
 
         {
           segment: "ciencias-basicas",
-          title: "Ciencias básicas de ingeniería",
-        },
-
-        {
-          segment: "turismo-sustentable",
-          title: "Turismo Sustentable, Gastronomía y Hotelería",
-        },
-
-        {
-          segment: "tutorias",
-          title: "Tutorías",
-        },
-
-        {
-          segment: "desarrollo-académico",
-          title: "Desarrollo académico",
+          title: "Ciencias Básicas de Ingeniería",
         },
 
         {
           segment: "economia-negocios",
           title: "Economía y Negocios",
         },
+
+        
         {
-          segment: "recursos-humanos",
-          title: "Recursos Humanos",
+          segment: "turismo-sustentable",
+          title: "Turismo Sustentable, Gastronomía y Hotelería",
         },
+
+
+        {
+          segment: "desarrollo-humano",
+          title: "Desarrollo Humano",
+        },
+
+
+
+
+        {
+          segment: "desarrollo-academico",
+          title: "Desarrollo Académico",
+        },
+
+
 
         {
           segment: "departamento-investigacion",
           title: "Departamento de Investigacion",
         },
+
+
+        {
+          segment: "tutorias",
+          title: "Tutorías",
+        },
+
+
       ],
     },
 

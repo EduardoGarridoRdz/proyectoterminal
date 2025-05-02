@@ -6,7 +6,7 @@ from .views import *
 from .procesamiento import RecibirArchivo
 from .formato_archivo import FormatoArchivo
 from .models import Usuario
-from .views_formulario import guardar_formulario_unificado
+from . import views_formulario
 
 
 router = routers.DefaultRouter()
@@ -33,7 +33,7 @@ router.register(r'vinculacionAcad', VinculacionAcadViewSet)
 
 
 """ <----------------------- PROFESORES --------------------------> """
-router.register(r'profesores', ProfesorViewSet)
+router.register(r'profesor', ProfesorViewSet)
 router.register(r'proyectos', ProyectoViewSet)
 router.register(r'tipo_estancia', TipoEstanciaViewSet)
 router.register(r'asesorias', AsesoriaViewSet)
@@ -59,15 +59,31 @@ router.register(r'grado_academico', GradoAcademicoViewSet)
 router.register(r'estudios', EstudiosViewSet)
 router.register(r'grado_asesoria', GradoAsesoriaViewSet)
 router.register(r'actividades_inactivo', ActividadesinactivoViewSet)
+router.register(r'departamentos', DepartamentoViewSet)
+router.register(r'programa_educativo', ProgramaEducativoViewSet)
+router.register(r'sexo', SexoViewSet)
+router.register(r'informacion_adicional', InformacionAdicionalViewSet)
+router.register(r'formacion_integral_evento', FormacionIntegralEventoViewSet)
+router.register(r'actividad_vinculacion', ActividadVinculacionViewSet)
+router.register(r'proyecto_tesis', ProyectoTesisViewSet)
+router.register(r'formulario_capacitacion', FormularioCapacitacionViewSet)
+router.register(r'proyecto_investigacion', ProyectoInvestigacionViewSet)
+router.register(r'producto_investigacion', ProductoInvestigacionViewSet)
+
+""" <----------------------- USUARIOS --------------------------> """
 
 urlpatterns = [
-        path("guardar/", guardar_formulario_unificado),   
-
     path('', include(router.urls)), 
     path('docs/', include_docs_urls(title="API DOCS")),
     path('ProcesarExcel/', RecibirArchivo),
     path('FormatoArchivo/', FormatoArchivo),
     
+    #Profesores
+    path("capacitacion/", views_formulario.guardar_capacitacion),
+    path("proyectos-investigacion/", views_formulario.guardar_proyecto_investigacion),
+    path("formacion-integral/", views_formulario.guardar_evento_formacion_integral),
+    path("vinculacion/", views_formulario.guardar_actividad_vinculacion),
+
  
 
  ]
